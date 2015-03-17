@@ -331,7 +331,7 @@ float nathansrand = (rand () % 21);
    // newImage = = new wxImage(bitmap.ConvertToImage());
 
     float r,g,b;
-    int newr,newg,newb; 
+    int newr,newg,newb;
 
     for( int i=0;i<imgWidth;i++)
       for(int j=0;j<imgHeight;j++){
@@ -2493,6 +2493,8 @@ void MyFrame::RandomLookUp(wxCommandEvent & event){
 
 }
 
+
+
 void MyFrame::FindHistogram(wxCommandEvent & event){
 
  printf("Finding  Histogram of image...");
@@ -2503,14 +2505,13 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
 	float rArray[256];
 	float gArray[256];
 	float bArray[256];
-	float res;
 
 
     for(int z=0;z<256;z++) {
 	rArray[z] = 0;
 	gArray[z] = 0;
 	bArray[z] = 0;
-	}
+    }
 
 
     for(int i=0;i<imgWidth;i++) {
@@ -2523,18 +2524,19 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
 			rArray[r] ++;
 			gArray[g] ++;
 			bArray[b] ++;
-			
+
 			//cout << r << endl;
 
 	   }
 	}
 
     printf("Found Histogram!");
+
 /* /////////////////////////////////////////////////////// */
 /* Normalize now! */
 /* /////////////////////////////////////////////////////// */
 
-	res = imgWidth * imgHeight;
+    float res = imgWidth * imgHeight;
 
 	for(int y = 0;y<256;y++) {
 		rArray[y] = rArray[y] / res;
@@ -2542,13 +2544,41 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
 		bArray[y] = bArray[y] / res;
 	}
 
-	for(int x =0;x<256;x++) {
-		cout << rArray[x] << endl;
-	}
+
 /* /////////////////////////////////////////////////////// */
 /* Equalize now! */
 /* /////////////////////////////////////////////////////// */
 
+    float rCDF,gCDF,bCDF = 0;
+	for(int x=0;x<256;x++) {
+		rCDF += rArray[x];
+		gCDF += gArray[x];
+		bCDF += bArray[x];
+	}
+	//cumulative probabilities
+
+	for(int i=0;i<256;i++) {
+		rArray[i] *= rCDF;
+		gArray[i] *= gCDF;
+		bArray[i] *= bCDF;
+	}
+	//Create three lookup tables, cumulative probabilities * each intensity count
+
+    for(int i=0;i<256;i++) {
+		printf("Print normalized Red pixel lookup table");
+		cout << rArray[i] << endl;
+		printf("Print normalized Green pixel lookup table");
+		cout << gArray[i] << endl;
+		printf("Print normalized Blue pixel lookup table");
+		cout << bArray[i] << endl;
+			/*r = loadedImage -> GetRed(i,j);
+			g = loadedImage -> GetGreen(i,j);
+			b = loadedImage -> GetBlue(i,j);
+			loadedImage->SetRGB(i,j,newr,newg,newb);*/
+	}
+
+    printf("\n\nFinished histogram equalisation function.\n");
+    Refresh();
 }
 
 
