@@ -44,6 +44,10 @@ class MyFrame : public wxFrame {
     void PowerLaw(wxCommandEvent & event);
     void RandomLookUp(wxCommandEvent & event);
     void FindHistogram(wxCommandEvent & event);
+    void HistogramMean(wxCommandEvent & event);
+    void HistogramSD(wxCommandEvent & event);
+    void SimpleThresholding(wxCommandEvent & event);
+    void AutomatedThresholding(wxCommandEvent & event);
     void OnSaveImage(wxCommandEvent & event);
     void OnMyFunctionImage(wxCommandEvent & event); //---> To be modified!
  public:
@@ -89,4 +93,8 @@ enum { EXIT_ID = wxID_HIGHEST + 1,
        RANDOMLOOKUP_IMAGE_ID,
        ROI_IMAGE_ID,
        HISTOGRAM_IMAGE_ID,
+       MEAN_IMAGE_ID,
+       STANDARDDEVIATION_IMAGE_ID,
+       STHRESHOLDING_IMAGE_ID,
+       ATHRESHOLDING_IMAGE_ID,
 };
