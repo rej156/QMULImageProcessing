@@ -168,7 +168,7 @@ fileMenuq = new wxMenu;
 //###########################################################//
 //----------------------START MY MENU -----------------------//
 //###########################################################//
- fileMenuq->Append(HISTOGRAM_IMAGE_ID, _T("&Find Histogram"));
+ fileMenuq->Append(HISTOGRAM_IMAGE_ID, _T("&Normalize Histogram"));
 
 //###########################################################//
 //----------------------END MY MENU -------------------------//
@@ -190,8 +190,42 @@ fileMenuq = new wxMenu;
 ////////////////////////////////////////////////////////////////////
 
 
-////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////NextFileMenu
 
+fileMenuq = new wxMenu;
+  fileMenuq->Append(LOAD_FILE_ID, _T("&Open file"));
+  fileMenuq->AppendSeparator();
+
+//###########################################################//
+//----------------------START MY MENU -----------------------//
+//###########################################################//
+ fileMenuq->Append(MEAN_IMAGE_ID, _T("&Mean Histogram"));
+ fileMenuq->Append(STANDARDDEVIATION_IMAGE_ID, _T("&Standard Deviatio
+ n Histogram"));
+ fileMenuq->Append(STHRESHOLDING_IMAGE_ID, _T("&Simple Thresholding"));
+ fileMenuq->Append(ATHRESHOLDING_IMAGE_ID, _T("&Automated Thresholding"));
+
+//###########################################################//
+//----------------------END MY MENU -------------------------//
+//###########################################################//
+
+  fileMenuq->AppendSeparator();
+  fileMenuq->Append(SAVE_IMAGE_ID, _T("&Save image"));
+  fileMenuq->Append(EXIT_ID, _T("E&xit"));
+
+
+  menuBar->Append(fileMenuq, _T("&Lab9"));
+
+  SetMenuBar(menuBar);
+  CreateStatusBar(3);
+  oldWidth = 0;
+  oldHeight = 0;
+  loadedImage = 0;
+
+////////////////////////////////////////////////////////////////////
+
+
+/
 /* initialise the variables that we added */
   imgWidth = imgHeight = 0;
   stuffToDraw = 0;
@@ -2581,7 +2615,12 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
     Refresh();
 }
 
-
+void MyFrame::HistogramSD(wxCommandEvent & event){
+}
+void MyFrame::SimpleThresholding(wxCommandEvent & event){
+}
+void MyFrame::AutomatedThresholding(wxCommandEvent & event){
+}
 
 //###########################################################//
 //-----------------------------------------------------------//
@@ -2683,8 +2722,10 @@ BEGIN_EVENT_TABLE (MyFrame, wxFrame)
  // EVT_MENU ( ROI_IMAGE_ID,  MyFrame::ROI)
   EVT_MENU ( RESCALE_IMAGE_ID,  MyFrame::Rescale)
   EVT_MENU ( HISTOGRAM_IMAGE_ID, MyFrame::FindHistogram)
-
-
+  EVT_MENU ( MEAN_IMAGE_ID, MyFrame::HistogramMean)
+  EVT_MENU ( STANDARDDEVIATION_IMAGE_ID, MyFrame::HistogramSD)
+  EVT_MENU ( STHRESHOLDING_IMAGE_ID, MyFrame::SimpleThresholding)
+  EVT_MENU ( ATHRESHOLDING_IMAGE_ID, MyFrame::AutomatedThresholding)
 
 
 //###########################################################//
