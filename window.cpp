@@ -168,7 +168,7 @@ fileMenuq = new wxMenu;
 //###########################################################//
 //----------------------START MY MENU -----------------------//
 //###########################################################//
- fileMenuq->Append(HISTOGRAM_IMAGE_ID, _T("&Normalize Histogram"));
+ fileMenuq->Append(HISTOGRAM_IMAGE_ID, _T("&Equalise Histogram"));
 
 //###########################################################//
 //----------------------END MY MENU -------------------------//
@@ -200,8 +200,7 @@ fileMenuq = new wxMenu;
 //----------------------START MY MENU -----------------------//
 //###########################################################//
  fileMenuq->Append(MEAN_IMAGE_ID, _T("&Mean Histogram"));
- fileMenuq->Append(STANDARDDEVIATION_IMAGE_ID, _T("&Standard Deviatio
- n Histogram"));
+ fileMenuq->Append(STANDARDDEVIATION_IMAGE_ID, _T("&Standard Deviation Histogram"));
  fileMenuq->Append(STHRESHOLDING_IMAGE_ID, _T("&Simple Thresholding"));
  fileMenuq->Append(ATHRESHOLDING_IMAGE_ID, _T("&Automated Thresholding"));
 
@@ -225,7 +224,6 @@ fileMenuq = new wxMenu;
 ////////////////////////////////////////////////////////////////////
 
 
-/
 /* initialise the variables that we added */
   imgWidth = imgHeight = 0;
   stuffToDraw = 0;
@@ -2583,38 +2581,30 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
 /* Equalize now! */
 /* /////////////////////////////////////////////////////// */
 
-    float rCDF,gCDF,bCDF = 0;
-	for(int x=0;x<256;x++) {
-		rCDF += rArray[x];
-		gCDF += gArray[x];
-		bCDF += bArray[x];
-	}
-	//cumulative probabilities
+    float rCDF[256],gCDF[256],bCDF[256];
+	rCDF[0] = rArray[0];
+	gCDF[0] = gArray[0];
+	bCDF[0] = bArray[0];
+	for(int x=1;x<256;x++) {
+		rCDF[x] = rCDF[x-1] + rArray[x];
+		gCDF[x] = gCDF[x-1] + gArray[x];
+		bCDF[x] = bCDF[x-1] + bArray[x];
+	}	
 
-	for(int i=0;i<256;i++) {
-		rArray[i] *= rCDF;
-		gArray[i] *= gCDF;
-		bArray[i] *= bCDF;
-	}
-	//Create three lookup tables, cumulative probabilities * each intensity count
 
-    for(int i=0;i<256;i++) {
-		printf("Print normalized Red pixel lookup table");
-		cout << rArray[i] << endl;
-		printf("Print normalized Green pixel lookup table");
-		cout << gArray[i] << endl;
-		printf("Print normalized Blue pixel lookup table");
-		cout << bArray[i] << endl;
-			/*r = loadedImage -> GetRed(i,j);
-			g = loadedImage -> GetGreen(i,j);
-			b = loadedImage -> GetBlue(i,j);
-			loadedImage->SetRGB(i,j,newr,newg,newb);*/
-	}
+	for(int i=0;i<imgWidth;i++)
+			for(int j=0;j<imgHeight;j++){
+					loadedImage->SetRGB(i,j,rCDF[loadedImage->GetRed(i,j)]*255,
+									gCDF[loadedImage->GetGreen(i,j)]*255,
+									bCDF[loadedImage->GetBlue(i,j)]*255);
+			}
 
-    printf("\n\nFinished histogram equalisation function.\n");
-    Refresh();
+	printf("\n\nFinished histogram equalisation function.\n");
+	Refresh();
 }
 
+void MyFrame::HistogramMean(wxCommandEvent & event){
+}
 void MyFrame::HistogramSD(wxCommandEvent & event){
 }
 void MyFrame::SimpleThresholding(wxCommandEvent & event){
@@ -2632,105 +2622,105 @@ void MyFrame::AutomatedThresholding(wxCommandEvent & event){
 //IMAGE SAVING
 void MyFrame::OnSaveImage(wxCommandEvent & event){
 
-    printf("Saving image...");
-    free(loadedImage);
-    loadedImage = new wxImage(bitmap.ConvertToImage());
+		printf("Saving image...");
+		free(loadedImage);
+		loadedImage = new wxImage(bitmap.ConvertToImage());
 
-    loadedImage->SaveFile(wxT("Saved_Image.bmp"), wxBITMAP_TYPE_BMP);
+		loadedImage->SaveFile(wxT("Saved_Image.bmp"), wxBITMAP_TYPE_BMP);
 
-    printf("Finished Saving.\n");
+		printf("Finished Saving.\n");
 }
 
 
 void MyFrame::OnExit (wxCommandEvent & event){
-  Close(TRUE);
+		Close(TRUE);
 }
 
 
 void MyFrame::OnPaint(wxPaintEvent & event){
-  wxPaintDC dc(this);
-  int cWidth, cHeight;
-  GetSize(&cWidth, &cHeight);
-  if ((back_bitmap == NULL) || (oldWidth != cWidth) || (oldHeight != cHeight)) {
-    if (back_bitmap != NULL)
-      delete back_bitmap;
-    back_bitmap = new wxBitmap(cWidth, cHeight);
-    oldWidth = cWidth;
-    oldHeight = cHeight;
-  }
-  wxMemoryDC *temp_dc = new wxMemoryDC(&dc);
-  temp_dc->SelectObject(*back_bitmap);
-  // We can now draw into the offscreen DC...
-  temp_dc->Clear();
-  if(loadedImage)
-    temp_dc->DrawBitmap(wxBitmap(*loadedImage), 0, 0, false);//given bitmap xcoord y coord and transparency
+		wxPaintDC dc(this);
+		int cWidth, cHeight;
+		GetSize(&cWidth, &cHeight);
+		if ((back_bitmap == NULL) || (oldWidth != cWidth) || (oldHeight != cHeight)) {
+				if (back_bitmap != NULL)
+						delete back_bitmap;
+				back_bitmap = new wxBitmap(cWidth, cHeight);
+				oldWidth = cWidth;
+				oldHeight = cHeight;
+		}
+		wxMemoryDC *temp_dc = new wxMemoryDC(&dc);
+		temp_dc->SelectObject(*back_bitmap);
+		// We can now draw into the offscreen DC...
+		temp_dc->Clear();
+		if(loadedImage)
+				temp_dc->DrawBitmap(wxBitmap(*loadedImage), 0, 0, false);//given bitmap xcoord y coord and transparency
 
-  switch(stuffToDraw){
-     case NOTHING:
-        break;
-     case ORIGINAL_IMG:
-       bitmap.CleanUpHandlers; // clean the actual image header
-       bitmap = wxBitmap(*loadedImage); // Update the edited/loaded image
-       break;
-  }
+		switch(stuffToDraw){
+				case NOTHING:
+						break;
+				case ORIGINAL_IMG:
+						bitmap.CleanUpHandlers; // clean the actual image header
+						bitmap = wxBitmap(*loadedImage); // Update the edited/loaded image
+						break;
+		}
 
-// update image size
-imgWidth  = (bitmap.ConvertToImage()).GetWidth();
-imgHeight = (bitmap.ConvertToImage()).GetHeight();
+		// update image size
+		imgWidth  = (bitmap.ConvertToImage()).GetWidth();
+		imgHeight = (bitmap.ConvertToImage()).GetHeight();
 
 
 
- temp_dc->SelectObject(bitmap);//given bitmap
+		temp_dc->SelectObject(bitmap);//given bitmap
 
-  //end draw all the things
-  // Copy from this DC to another DC.
-  dc.Blit(0, 0, cWidth, cHeight, temp_dc, 0, 0);
-  delete temp_dc; // get rid of the memory DC
+		//end draw all the things
+		// Copy from this DC to another DC.
+		dc.Blit(0, 0, cWidth, cHeight, temp_dc, 0, 0);
+		delete temp_dc; // get rid of the memory DC
 }
 
-BEGIN_EVENT_TABLE (MyFrame, wxFrame)
-  EVT_MENU ( LOAD_FILE_ID,  MyFrame::OnOpenFile)
-  EVT_MENU ( EXIT_ID,  MyFrame::OnExit)
+		BEGIN_EVENT_TABLE (MyFrame, wxFrame)
+		EVT_MENU ( LOAD_FILE_ID,  MyFrame::OnOpenFile)
+EVT_MENU ( EXIT_ID,  MyFrame::OnExit)
 
-//###########################################################//
-//----------------------START MY EVENTS ---------------------//
-//###########################################################//
+		//###########################################################//
+		//----------------------START MY EVENTS ---------------------//
+		//###########################################################//
 
-  EVT_MENU ( INVERT_IMAGE_ID,  MyFrame::OnInvertImage)
-  EVT_MENU ( SCALE_IMAGE_ID,  MyFrame::OnScaleImage)
-  EVT_MENU ( SAVE_IMAGE_ID,  MyFrame::OnSaveImage)
-  EVT_MENU ( SHIFTING_IMAGE_ID,  MyFrame::Shifting)
-  EVT_MENU ( AVERAGING_IMAGE_ID,  MyFrame::Averaging)
-  EVT_MENU ( WEIGHTED_IMAGE_ID,  MyFrame::Weighted)
-  EVT_MENU ( FLAPLACIAN_IMAGE_ID,  MyFrame::FLaplacian)
-  EVT_MENU ( ELAPLACIAN_IMAGE_ID,  MyFrame::ELaplacian)
-  EVT_MENU ( FLAPLACIANE_IMAGE_ID,  MyFrame::FLaplacianE)
-  EVT_MENU ( ELAPLACIANE_IMAGE_ID,  MyFrame::ELaplacianE)
-  EVT_MENU ( ROBERTS_IMAGE_ID,  MyFrame::Roberts)
-  EVT_MENU ( SOBELX_IMAGE_ID,  MyFrame::Sobelx)
-  EVT_MENU ( SOBELY_IMAGE_ID,  MyFrame::Sobely)
-  EVT_MENU ( SALTANDPEPPER_IMAGE_ID,  MyFrame::SaltandPepperFiltering)
-  EVT_MENU ( MINFILTERING_IMAGE_ID,  MyFrame::MinFiltering)//--->To be modified!
-  EVT_MENU ( MAXFILTERING_IMAGE_ID,  MyFrame::MaxFiltering)
-  EVT_MENU ( MIDPOINTFILTERING_IMAGE_ID,  MyFrame::MidFiltering)
-  EVT_MENU ( MEDIANFILTERING_IMAGE_ID,  MyFrame::MedFiltering)
-  EVT_MENU ( NEGATIVE_IMAGE_ID,  MyFrame::Negative)
-  EVT_MENU ( LOGARITHMIC_IMAGE_ID,  MyFrame::Logarithmic)
-  EVT_MENU ( POWERLAW_IMAGE_ID,  MyFrame::PowerLaw)
-  EVT_MENU ( RANDOMLOOKUP_IMAGE_ID,  MyFrame::RandomLookUp)
-  EVT_MENU ( UNDO_IMAGE_ID,  MyFrame::UndoImage)
- // EVT_MENU ( ROI_IMAGE_ID,  MyFrame::ROI)
-  EVT_MENU ( RESCALE_IMAGE_ID,  MyFrame::Rescale)
-  EVT_MENU ( HISTOGRAM_IMAGE_ID, MyFrame::FindHistogram)
-  EVT_MENU ( MEAN_IMAGE_ID, MyFrame::HistogramMean)
-  EVT_MENU ( STANDARDDEVIATION_IMAGE_ID, MyFrame::HistogramSD)
-  EVT_MENU ( STHRESHOLDING_IMAGE_ID, MyFrame::SimpleThresholding)
-  EVT_MENU ( ATHRESHOLDING_IMAGE_ID, MyFrame::AutomatedThresholding)
+		EVT_MENU ( INVERT_IMAGE_ID,  MyFrame::OnInvertImage)
+		EVT_MENU ( SCALE_IMAGE_ID,  MyFrame::OnScaleImage)
+		EVT_MENU ( SAVE_IMAGE_ID,  MyFrame::OnSaveImage)
+		EVT_MENU ( SHIFTING_IMAGE_ID,  MyFrame::Shifting)
+		EVT_MENU ( AVERAGING_IMAGE_ID,  MyFrame::Averaging)
+		EVT_MENU ( WEIGHTED_IMAGE_ID,  MyFrame::Weighted)
+		EVT_MENU ( FLAPLACIAN_IMAGE_ID,  MyFrame::FLaplacian)
+		EVT_MENU ( ELAPLACIAN_IMAGE_ID,  MyFrame::ELaplacian)
+		EVT_MENU ( FLAPLACIANE_IMAGE_ID,  MyFrame::FLaplacianE)
+		EVT_MENU ( ELAPLACIANE_IMAGE_ID,  MyFrame::ELaplacianE)
+		EVT_MENU ( ROBERTS_IMAGE_ID,  MyFrame::Roberts)
+		EVT_MENU ( SOBELX_IMAGE_ID,  MyFrame::Sobelx)
+		EVT_MENU ( SOBELY_IMAGE_ID,  MyFrame::Sobely)
+		EVT_MENU ( SALTANDPEPPER_IMAGE_ID,  MyFrame::SaltandPepperFiltering)
+		EVT_MENU ( MINFILTERING_IMAGE_ID,  MyFrame::MinFiltering)//--->To be modified!
+		EVT_MENU ( MAXFILTERING_IMAGE_ID,  MyFrame::MaxFiltering)
+		EVT_MENU ( MIDPOINTFILTERING_IMAGE_ID,  MyFrame::MidFiltering)
+		EVT_MENU ( MEDIANFILTERING_IMAGE_ID,  MyFrame::MedFiltering)
+		EVT_MENU ( NEGATIVE_IMAGE_ID,  MyFrame::Negative)
+		EVT_MENU ( LOGARITHMIC_IMAGE_ID,  MyFrame::Logarithmic)
+		EVT_MENU ( POWERLAW_IMAGE_ID,  MyFrame::PowerLaw)
+		EVT_MENU ( RANDOMLOOKUP_IMAGE_ID,  MyFrame::RandomLookUp)
+EVT_MENU ( UNDO_IMAGE_ID,  MyFrame::UndoImage)
+// EVT_MENU ( ROI_IMAGE_ID,  MyFrame::ROI)
+		EVT_MENU ( RESCALE_IMAGE_ID,  MyFrame::Rescale)
+		EVT_MENU ( HISTOGRAM_IMAGE_ID, MyFrame::FindHistogram)
+		EVT_MENU ( MEAN_IMAGE_ID, MyFrame::HistogramMean)
+		EVT_MENU ( STANDARDDEVIATION_IMAGE_ID, MyFrame::HistogramSD)
+		EVT_MENU ( STHRESHOLDING_IMAGE_ID, MyFrame::SimpleThresholding)
+EVT_MENU ( ATHRESHOLDING_IMAGE_ID, MyFrame::AutomatedThresholding)
 
 
-//###########################################################//
-//----------------------END MY EVENTS -----------------------//
-//###########################################################//
+		//###########################################################//
+		//----------------------END MY EVENTS -----------------------//
+		//###########################################################//
 
-  EVT_PAINT (MyFrame::OnPaint)
+		EVT_PAINT (MyFrame::OnPaint)
 END_EVENT_TABLE()
