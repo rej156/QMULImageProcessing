@@ -7,6 +7,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <iostream>
+#include <math.h>
 using namespace std;
 
 static const wxChar *FILETYPES = _T("All files (*.*)|*.*");
@@ -2589,7 +2590,7 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
 		rCDF[x] = rCDF[x-1] + rArray[x];
 		gCDF[x] = gCDF[x-1] + gArray[x];
 		bCDF[x] = bCDF[x-1] + bArray[x];
-	}	
+	}
 
 
 	for(int i=0;i<imgWidth;i++)
@@ -2604,8 +2605,140 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
 }
 
 void MyFrame::HistogramMean(wxCommandEvent & event){
+ printf("Finding  Histogram of image...");
+    free(loadedImage);
+    loadedImage = new wxImage(bitmap.ConvertToImage());
+
+	int r,g,b;
+	float rArray[256];
+	float gArray[256];
+	float bArray[256];
+
+
+    for(int z=0;z<256;z++) {
+	rArray[z] = 0;
+	gArray[z] = 0;
+	bArray[z] = 0;
+    }
+
+
+    for(int i=0;i<imgWidth;i++) {
+       for(int j=0;j<imgHeight;j++){
+
+			r = loadedImage -> GetRed(i,j);
+			g = loadedImage -> GetGreen(i,j);
+			b = loadedImage -> GetBlue(i,j);
+
+			rArray[r] ++;
+			gArray[g] ++;
+			bArray[b] ++;
+
+			//cout << r << endl;
+
+	   }
+	}
+
+    printf("Found Histogram!");
+
+/* /////////////////////////////////////////////////////// */
+/* Normalize now! */
+/* /////////////////////////////////////////////////////// */
+
+    float res = imgWidth * imgHeight;
+    float rSum,gSum,bSum = 0;
+
+    for(int i=0;i<256;i++) {
+        rSum += rArray[r] * i;
+        gSum += gArray[r] * i;
+        bSum += bArray[r] * i;
+    }
+
+    cout << "Red's Histogram mean is: " << (rSum/res) << endl;
+    cout << "Green's Histogram mean is: " << (gSum/res) << endl;
+    cout << "Blue's Histogram mean is: " << (bSum/res) << endl;
+
 }
+
 void MyFrame::HistogramSD(wxCommandEvent & event){
+ printf("Finding  Histogram of image...");
+    free(loadedImage);
+    loadedImage = new wxImage(bitmap.ConvertToImage());
+
+	int r,g,b;
+	float rArray[256];
+	float gArray[256];
+	float bArray[256];
+
+
+    for(int z=0;z<256;z++) {
+	rArray[z] = 0;
+	gArray[z] = 0;
+	bArray[z] = 0;
+    }
+
+
+    for(int i=0;i<imgWidth;i++) {
+       for(int j=0;j<imgHeight;j++){
+
+			r = loadedImage -> GetRed(i,j);
+			g = loadedImage -> GetGreen(i,j);
+			b = loadedImage -> GetBlue(i,j);
+
+			rArray[r] ++;
+			gArray[g] ++;
+			bArray[b] ++;
+
+			//cout << r << endl;
+
+	   }
+	}
+
+    printf("Found Histogram!");
+
+/* /////////////////////////////////////////////////////// */
+/* Normalize now! */
+/* /////////////////////////////////////////////////////// */
+
+    float res = imgWidth * imgHeight;
+    float rSum,gSum,bSum = 0;
+	float rSqArray[256];
+	float gSqArray[256];
+	float bSqArray[256];
+
+    for(int i=0;i<256;i++){
+        rSqArray[i] = pow(rArray[i],2);
+        gSqArray[i] = pow(gArray[i],2);
+        bsQArray[i] = pow(bArray[i],2);
+    }
+
+    for(int i=0;i<256;i++){
+        rSum += rSqArray[i];
+        gSum += gSqArray[i];
+        bSum += bSqArray[i];
+    }
+    float rMeansq,gMeansq,bMeansq = 0;
+    rMeansq = rSum/res;
+    gMeansq = gSum/res;
+    bMeansq = bSum/res;
+
+    rSum,gSum,bSum = 0;
+
+    for(int i=0;i<256;i++){
+        rSum += rArray[i];
+        gSum += gArray[i];
+        bSum += bArray[i];
+    }
+    float rMean = rSum/res;
+    float gMean = rSum/res;
+    float bMean = rSum/res;
+
+    float rStd = sqrt((rMeansq - pow(rMean,2)));
+    float gStd = sqrt((gMeansq - pow(gMean,2)));
+    float bStd = sqrt((bMeansq - pow(bMean,2)));
+
+    cout << "Red Standard Deviation: " << rStd << endl;
+    cout << "Green Standard Deviation: " << gStd << endl;
+    cout << "Blue Standard Deviation: " << bStd << endl;
 }
 void MyFrame::SimpleThresholding(wxCommandEvent & event){
 }
@@ -2683,7 +2816,7 @@ void MyFrame::OnPaint(wxPaintEvent & event){
 EVT_MENU ( EXIT_ID,  MyFrame::OnExit)
 
 		//###########################################################//
-		//----------------------START MY EVENTS ---------------------//
+
 		//###########################################################//
 
 		EVT_MENU ( INVERT_IMAGE_ID,  MyFrame::OnInvertImage)
