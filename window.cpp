@@ -1850,11 +1850,11 @@ void MyFrame::SaltandPepperFiltering(wxCommandEvent & event){
 
 }
 
-//lab6 exercise2 minfiltering
-void MyFrame::MinFiltering(wxCommandEvent & event){
+//lab6 exercise2 maxfiltering
+void MyFrame::MaxFiltering(wxCommandEvent & event){
 
 
-    printf("Min Filtering...");
+    printf("Max Filtering...");
     free(loadedImage);
     loadedImage = new wxImage(bitmap.ConvertToImage());
 	int r,g,b;
@@ -2013,7 +2013,7 @@ void MyFrame::MinFiltering(wxCommandEvent & event){
 
     // cout<<arraycount;
 
-    printf(" Finished min filtering.\n");
+    printf(" Finished max filtering.\n");
 
     Refresh();
 
@@ -2021,9 +2021,9 @@ void MyFrame::MinFiltering(wxCommandEvent & event){
 
 }
 
-//lab6 exercise 3 maxfiltering
-void MyFrame::MaxFiltering(wxCommandEvent & event){
-    printf("Max Filtering...");
+//lab6 exercise 3 minfiltering
+void MyFrame::MinFiltering(wxCommandEvent & event){
+    printf("Min Filtering...");
     free(loadedImage);
     loadedImage = new wxImage(bitmap.ConvertToImage());
 	int r,g,b;
@@ -2182,12 +2182,9 @@ void MyFrame::MaxFiltering(wxCommandEvent & event){
 
     // cout<<arraycount;
 
-    printf(" Finished max filtering.\n");
+    printf(" Finished min filtering.\n");
 
     Refresh();
-
-
-
 
 }
 
@@ -2772,6 +2769,7 @@ void MyFrame::SimpleThresholding(wxCommandEvent & event){
 	Refresh();
 
 }
+
 void MyFrame::AutomatedThresholding(wxCommandEvent & event){
 
 	free(loadedImage);
