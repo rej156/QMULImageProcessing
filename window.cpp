@@ -2722,16 +2722,13 @@ void MyFrame::HistogramSD(wxCommandEvent & event){
 		    r = loadedImage -> GetRed(i,j);
 		    g = loadedImage -> GetGreen(i,j);
 		    b = loadedImage -> GetBlue(i,j);
-		    rvar_sum += r-rMean;
-		    gvar_sum += g-gMean;
-		    bvar_sum += b-bMean;
+		    rvar_sum += pow(r-rMean,2);
+		    gvar_sum += pow(g-gMean,2);
+		    bvar_sum += pow(b-bMean,2);
 		    //cout << r << endl;
 
 	    }
     }
-    rvar_sum = pow(rvar_sum,2);
-    gvar_sum = pow(gvar_sum,2);
-    bvar_sum = pow(bvar_sum,2);
 
     float rvar = rvar_sum/res;
     float gvar = gvar_sum/res;
