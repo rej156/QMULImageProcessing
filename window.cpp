@@ -2753,18 +2753,19 @@ void MyFrame::SimpleThresholding(wxCommandEvent & event){
     loadedImage = new wxImage(bitmap.ConvertToImage());
 	int r,g,b;
 
+    int greyscale;
+
     for( int i=0;i<imgWidth;i++)
         for(int j=0;j<imgHeight;j++){
 
             r = loadedImage -> GetRed(i,j);
             g = loadedImage -> GetGreen(i,j);
             b = loadedImage -> GetBlue(i,j);
-
+            greyscale = (r+g+b)/3;
             //Overwrite rgb values if over threshold.
-            if(r>user_threshold_val){r=overwrite_val;}
-            if(g>user_threshold_val){g=overwrite_val;}
-            if(b>user_threshold_val){b=overwrite_val;}
-            loadedImage->SetRGB(i,j,r,g,b);
+            if(greyscale>user_threshold_val){r=overwrite_val;}
+            else{greyscale=0;}
+            loadedImage->SetRGB(i,j,greyscale,greyscale,greyscale);
         }
 
     printf("\n\nFinished simple threshold function.\n");
