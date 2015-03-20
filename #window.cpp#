@@ -2153,8 +2153,11 @@ void MyFrame::Logarithmic(wxCommandEvent & event){
 	int r,g,b;
 	int sumr,sumg,sumb;
 	int constant;
-    cout<<"\nEnter your value:\n";
+    cout<<"\nEnter user constant:\n";
     cin>> constant;
+
+
+
 
     for( int i=0;i<imgWidth;i++)
         for(int j=0;j<imgHeight;j++){
@@ -2231,6 +2234,7 @@ void MyFrame::RandomLookUp(wxCommandEvent & event){
 	float constant;
 	float power;
 	int newArray[255];
+    //float random_number = (rand () % 256);
 
 	for( int z = 0; z<255; z++)
 	{
@@ -2248,11 +2252,18 @@ void MyFrame::RandomLookUp(wxCommandEvent & event){
             int newGreen = newArray[g];
             int newBlue = newArray[b];
 
+
+//	sumr = constant * pow(r,random_number);
+//	sumg = constant * pow(g,random_number);
+//	sumb = constant * pow(b,random_number);
+
+
             loadedImage->SetRGB(i,j,newRed,newGreen,newBlue);
         }
 
     printf("\n\nFinished random lookup function.\n");
     Refresh();
+
 
 }
 
@@ -2288,6 +2299,7 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
 			gArray[g] ++;
 			bArray[b] ++;
 
+			//cout << r << endl;
 
         }
 	}
@@ -2305,6 +2317,7 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
 		gArray[y] = gArray[y] / res;
 		bArray[y] = bArray[y] / res;
 	}
+
 
 /* /////////////////////////////////////////////////////// */
 /* Equalize now! */
@@ -2388,7 +2401,6 @@ void MyFrame::HistogramMean(wxCommandEvent & event){
 }
 
 void MyFrame::HistogramSD(wxCommandEvent & event){
-
     printf("Finding  Histogram of image...");
     free(loadedImage);
     loadedImage = new wxImage(bitmap.ConvertToImage());
@@ -2397,6 +2409,7 @@ void MyFrame::HistogramSD(wxCommandEvent & event){
 	float rArray[256];
 	float gArray[256];
 	float bArray[256];
+
 
     for(int z=0;z<256;z++) {
         rArray[z] = 0;
@@ -2415,6 +2428,8 @@ void MyFrame::HistogramSD(wxCommandEvent & event){
 			rArray[r] ++;
 			gArray[g] ++;
 			bArray[b] ++;
+
+			//cout << r << endl;
 
         }
     }
@@ -2447,6 +2462,7 @@ void MyFrame::HistogramSD(wxCommandEvent & event){
 		    rvar_sum += pow(r-rMean,2);
 		    gvar_sum += pow(g-gMean,2);
 		    bvar_sum += pow(b-bMean,2);
+		    //cout << r << endl;
 
 	    }
     }
@@ -2611,6 +2627,7 @@ void MyFrame::OnPaint(wxPaintEvent & event){
 	}
 	wxMemoryDC *temp_dc = new wxMemoryDC(&dc);
 	temp_dc->SelectObject(*back_bitmap);
+	// We can now draw into the offscreen DC...
 	temp_dc->Clear();
 	if(loadedImage)
 		temp_dc->DrawBitmap(wxBitmap(*loadedImage), 0, 0, false);//given bitmap xcoord y coord and transparency
@@ -2670,7 +2687,7 @@ void MyFrame::OnPaint(wxPaintEvent & event){
 	EVT_MENU ( POWERLAW_IMAGE_ID,  MyFrame::PowerLaw)
 	EVT_MENU ( RANDOMLOOKUP_IMAGE_ID,  MyFrame::RandomLookUp)
     EVT_MENU ( UNDO_IMAGE_ID,  MyFrame::UndoImage)
-    // EVT_MENU ( ROI_IMAGE_ID,  MyFrame::ROI)
+// EVT_MENU ( ROI_IMAGE_ID,  MyFrame::ROI)
 	EVT_MENU ( RESCALE_IMAGE_ID,  MyFrame::Rescale)
 	EVT_MENU ( HISTOGRAM_IMAGE_ID, MyFrame::FindHistogram)
 	EVT_MENU ( MEAN_IMAGE_ID, MyFrame::HistogramMean)
