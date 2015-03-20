@@ -26,7 +26,7 @@ bool BasicApplication::OnInit()
 MyFrame::MyFrame(const wxString title, int xpos, int ypos, int width, int height): wxFrame((wxFrame *) NULL, -1, title, wxPoint(xpos, ypos), wxSize(width, height)){
 
   fileMenu = new wxMenu;
-  fileMenu->Append(LOAD_FILE_ID, _T("&Open file"));
+  fileMenu->Append(LOAD_FILE_ID, _T("&Open file\tCTRL-O"));
   fileMenu->Append(RAWLOAD_FILE_ID, _T("&Open RAW file"));
   fileMenu->AppendSeparator();
 //###########################################################//
@@ -35,7 +35,7 @@ MyFrame::MyFrame(const wxString title, int xpos, int ypos, int width, int height
 
   fileMenu->Append(INVERT_IMAGE_ID, _T("&Invert image"));
   fileMenu->Append(SCALE_IMAGE_ID, _T("&Scale image"));
-  fileMenu->Append(UNDO_IMAGE_ID, _T("&Undo and reset picture"));
+  fileMenu->Append(UNDO_IMAGE_ID, _T("&Undo and reset picture\tCTRL-Z"));
   fileMenu->Append(ROI_IMAGE_ID, _T("Set Region of interest")); //--->Works?
   fileMenu->Append(RESCALE_IMAGE_ID, _T("&Rescale image"));//--->To be modified!
 
@@ -45,7 +45,7 @@ MyFrame::MyFrame(const wxString title, int xpos, int ypos, int width, int height
 
   fileMenu->AppendSeparator();
   fileMenu->Append(SAVE_IMAGE_ID, _T("&Save image"));
-  fileMenu->Append(EXIT_ID, _T("E&xit"));
+  fileMenu->Append(EXIT_ID, _T("E&xit\tCTRL-W"));
 
   menuBar = new wxMenuBar;
   menuBar->Append(fileMenu, _T("&File"));
