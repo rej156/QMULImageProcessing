@@ -2774,12 +2774,40 @@ void MyFrame::SimpleThresholding(wxCommandEvent & event){
 }
 void MyFrame::AutomatedThresholding(wxCommandEvent & event){
 
-    /*Estimate theshold
-      Calculate mean
-      Set as threshold for next pixel
-      Overwrite if over
-      Recalculate threshold; repeat till end.
-     */
+    free(loadedImage);
+    loadedImage = new wxImage(bitmap.ConvertToImage());
+	int r,g,b;
+    int num_of_white,num_of_black;
+    int greyscale;
+    float original_threshold = 127;
+    float current_threshold;
+    float new_threshold;
+    current_threshold = original_threshold;
+    float white_sum,black_sum=0;
+
+    for( int i=0;i<imgWidth;i++)
+        for(int j=0;j<imgHeight;j++){
+
+            r = loadedImage -> GetRed(i,j);
+            g = loadedImage -> GetGreen(i,j);
+            b = loadedImage -> GetBlue(i,j);
+            greyscale = (r+g+b)/3;
+            if(greyscale < current_threshold){black_sum+=greyscale;num_of_black++;}
+            else{white_sum+=greyscale;num_of_white++;}
+            new_threshold = ((white_sum/num_of_white) + (black_sum/num_of_black))/2;
+            if((new_thresold-current_threshold)<original_threshold) {
+                break;
+            }
+            else {
+                current_threshold=new_threshold;
+                if(greyscale<current_threshold){greyscale=0;}
+                else{greyscale=255;}
+            }
+            loadedImage->SetRGB(i,j,greyscale,greyscale,greyscale);
+        }
+
+    printf("\nFinished iterative automated threshold function.\n");
+    Refresh();
 
 }
 
