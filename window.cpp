@@ -240,25 +240,29 @@ MyFrame::~MyFrame(){
 
 }
 
+/*
+ */
+
 void MyFrame::OnOpenFile(wxCommandEvent & event){
-  wxFileDialog *openFileDialog = new wxFileDialog ( this, _T("Open file"), _T(""), _T(""), FILETYPES, wxOPEN, wxDefaultPosition);
-  if(openFileDialog->ShowModal() == wxID_OK){
-    wxString filename = openFileDialog->GetFilename();
-    wxString path = openFileDialog->GetPath();
-    printf("Loading image form file...");
-    loadedImage = new wxImage(path); //Image Loaded form file
-    loadedImage2 = new wxImage(path);
-    if(loadedImage->Ok()){
-      stuffToDraw = ORIGINAL_IMG;    // set the display flag
-      printf("Done! \n");
+    wxFileDialog *openFileDialog = new wxFileDialog ( this, _T("Open file"),
+                                                      _T(""""), _T(""""), FILETYPES, wxOPEN, wxDefaultPosition);
+    if(openFileDialog->ShowModal() == wxID_OK){
+        wxString filename = openFileDialog->GetFilename();
+        wxString path = openFileDialog->GetPath();
+        printf("Loading image form file...");
+        loadedImage = new wxImage(path); //Image Loaded form file
+        loadedImage2 = new wxImage(path);
+        if(loadedImage->Ok()){
+            stuffToDraw = ORIGINAL_IMG;    // set the display flag
+            printf("Done! \n");
+        }
+        else {
+            printf("error:...");
+            loadedImage->Destroy();
+            loadedImage = 0;
+        }
+        Refresh();
     }
-    else {
-      printf("error:...");
-      loadedImage->Destroy();
-      loadedImage = 0;
-    }
-    Refresh();
-  }
 }
 
 
@@ -277,11 +281,11 @@ void MyFrame::OnInvertImage(wxCommandEvent & event){
     loadedImage = new wxImage(bitmap.ConvertToImage());
 
     for( int i=0;i<imgWidth;i++)
-       for(int j=0;j<imgHeight;j++){
- 	loadedImage->SetRGB(i,j,255-loadedImage->GetRed(i,j),
-				255-loadedImage->GetGreen(i,j),
-				255-loadedImage->GetBlue(i,j));
-    }
+        for(int j=0;j<imgHeight;j++){
+            loadedImage->SetRGB(i,j,255-loadedImage->GetRed(i,j),
+                                255-loadedImage->GetGreen(i,j),
+                                255-loadedImage->GetBlue(i,j));
+        }
 
     printf(" Finished inverting.\n");
     Refresh();
@@ -297,11 +301,11 @@ void MyFrame::OnScaleImage(wxCommandEvent & event){
     loadedImage = new wxImage(bitmap.ConvertToImage());
 
     for( int i=0;i<imgWidth;i++)
-       for(int j=0;j<imgHeight;j++){
- 	loadedImage->SetRGB(i,j,2.5* loadedImage->GetRed(i,j),
-				2.5* loadedImage->GetGreen(i,j),
-				2.5* loadedImage->GetBlue(i,j));
-    }
+        for(int j=0;j<imgHeight;j++){
+            loadedImage->SetRGB(i,j,2.5* loadedImage->GetRed(i,j),
+                                2.5* loadedImage->GetGreen(i,j),
+                                2.5* loadedImage->GetBlue(i,j));
+        }
 
     printf(" Finished scaling.\n");
     Refresh();
@@ -314,7 +318,7 @@ void MyFrame::UndoImage(wxCommandEvent & event){
 
     free(loadedImage);
 
-undo = loadedImage2;
+    undo = loadedImage2;
     loadedImage = new wxImage(undo -> Copy());
 
 
@@ -326,28 +330,28 @@ undo = loadedImage2;
 //ROI
 void MyFrame::ROI(wxCommandEvent & event){
 
-    printf("Changing ROI...");
-    free(loadedImage);
-    loadedImage = new wxImage(bitmap.ConvertToImage());
-	int x1;
-	int y1;
-	int x2;
-	int y2;
-	cout<<"\nPlease enter 4 coordinates, x by y, x by y to pick a region of interest\n";
-	cout<<"First x:\n";
-	cin>>x1
-	cout<<"\nFirst y:\n";
-	cin>>y1
-	cout<<"Second x:\n";
-	cin>>x2
-	cout<<"\nSecond y:\n";
-	cin>>y2
+printf("Changing ROI...");
+free(loadedImage);
+loadedImage = new wxImage(bitmap.ConvertToImage());
+int x1;
+int y1;
+int x2;
+int y2;
+cout<<"\nPlease enter 4 coordinates, x by y, x by y to pick a region of interest\n";
+cout<<"First x:\n";
+cin>>x1
+cout<<"\nFirst y:\n";
+cin>>y1
+cout<<"Second x:\n";
+cin>>x2
+cout<<"\nSecond y:\n";
+cin>>y2
 
 
 
 
 
-    Refresh();
+Refresh();
 }
 */
 //////////////////////////////////////////////
@@ -357,67 +361,67 @@ void MyFrame::ROI(wxCommandEvent & event){
 
 void MyFrame::Rescale(wxCommandEvent & event){
 
-float nathansrand = (rand () % 21);
+    float nathansrand = (rand () % 21);
     printf("Scale function..");
     free(loadedImage);
     loadedImage = new wxImage(bitmap.ConvertToImage());
-   // newImage = = new wxImage(bitmap.ConvertToImage());
+    // newImage = = new wxImage(bitmap.ConvertToImage());
 
     float r,g,b;
     int newr,newg,newb;
 
     for( int i=0;i<imgWidth;i++)
-      for(int j=0;j<imgHeight;j++){
-	// GET THE RGB VALUES
-        r = loadedImage->GetRed(i,j);   // red pixel value
-        g = loadedImage->GetGreen(i,j); // green pixel value
-	b = loadedImage->GetBlue(i,j); // blue pixel value
+        for(int j=0;j<imgHeight;j++){
+            // GET THE RGB VALUES
+            r = loadedImage->GetRed(i,j);   // red pixel value
+            g = loadedImage->GetGreen(i,j); // green pixel value
+            b = loadedImage->GetBlue(i,j); // blue pixel value
 
-	r *= nathansrand/10;
-	g *= nathansrand/10;
-	b *= nathansrand/10;
-
-
-	if(r > 255)
-	{
-	r = 255;
-	}
-	else if (r < 0)
-	{
-	r = 0;
-	}
-
-	if(g > 255)
-	{
-	g = 255;
-	}
-	else if (g < 0)
-	{
-	g = 0;
-	}
+            r *= nathansrand/10;
+            g *= nathansrand/10;
+            b *= nathansrand/10;
 
 
-	if(b > 255)
-	{
-	b = 255;
-	}
-	else if (b < 0)
-	{
-	b = 0;
-	}
+            if(r > 255)
+            {
+                r = 255;
+            }
+            else if (r < 0)
+            {
+                r = 0;
+            }
 
-	newr = int(r);
-	newg = int(g);
-	newb = int(b);
+            if(g > 255)
+            {
+                g = 255;
+            }
+            else if (g < 0)
+            {
+                g = 0;
+            }
 
-	//printf("(%d,%d) [r = %x  | g = %x | b = %x] \n",i,j,r,g,b);
 
-	// SAVE THE RGB VALUES
-	loadedImage->SetRGB(i,j,newr,newg,newb);
-	cout<<newr<< "  ";
-    }
+            if(b > 255)
+            {
+                b = 255;
+            }
+            else if (b < 0)
+            {
+                b = 0;
+            }
 
-  printf ("Random number= %g", nathansrand);
+            newr = int(r);
+            newg = int(g);
+            newb = int(b);
+
+            //printf("(%d,%d) [r = %x  | g = %x | b = %x] \n",i,j,r,g,b);
+
+            // SAVE THE RGB VALUES
+            loadedImage->SetRGB(i,j,newr,newg,newb);
+            cout<<newr<< "  ";
+        }
+
+    printf ("Random number= %g", nathansrand);
     printf(" Finished rescale.\n");
 
     Refresh();
@@ -437,61 +441,61 @@ float nathansrand = (rand () % 21);
 //lab5 exercise 1 shifting
 void MyFrame::Shifting(wxCommandEvent & event){
 
-float nathansrand = (rand () % 511)-255;
+    float nathansrand = (rand () % 511)-255;
     printf("Shift function..");
     free(loadedImage);
     loadedImage = new wxImage(bitmap.ConvertToImage());
-   // newImage = = new wxImage(bitmap.ConvertToImage());
+    // newImage = = new wxImage(bitmap.ConvertToImage());
 
 
 
     int r,g,b;
 
     for( int i=0;i<imgWidth;i++)
-      for(int j=0;j<imgHeight;j++){
-	// GET THE RGB VALUES
-        r = loadedImage->GetRed(i,j);   // red pixel value
-        g = loadedImage->GetGreen(i,j); // green pixel value
-	b = loadedImage->GetBlue(i,j); // blue pixel value
+        for(int j=0;j<imgHeight;j++){
+            // GET THE RGB VALUES
+            r = loadedImage->GetRed(i,j);   // red pixel value
+            g = loadedImage->GetGreen(i,j); // green pixel value
+            b = loadedImage->GetBlue(i,j); // blue pixel value
 
-        r=r + nathansrand;
-	g=g + nathansrand;
-	b=b + nathansrand;
+            r=r + nathansrand;
+            g=g + nathansrand;
+            b=b + nathansrand;
 
-	if(r > 255)
-	{
-	r = 255;
-	}
-	else if (r < 0)
-	{
-	r = 0;
-	}
+            if(r > 255)
+            {
+                r = 255;
+            }
+            else if (r < 0)
+            {
+                r = 0;
+            }
 
-	if(g > 255)
-	{
-	g = 255;
-	}
-	else if (g < 0)
-	{
-	g = 0;
-	}
+            if(g > 255)
+            {
+                g = 255;
+            }
+            else if (g < 0)
+            {
+                g = 0;
+            }
 
 
-	if(b > 255)
-	{
-	b = 255;
-	}
-	else if (b < 0)
-	{
-	b = 0;
-	}
-	//printf("(%d,%d) [r = %x  | g = %x | b = %x] \n",i,j,r,g,b);
+            if(b > 255)
+            {
+                b = 255;
+            }
+            else if (b < 0)
+            {
+                b = 0;
+            }
+            //printf("(%d,%d) [r = %x  | g = %x | b = %x] \n",i,j,r,g,b);
 
-	// SAVE THE RGB VALUES
-	loadedImage->SetRGB(i,j,r,g,b);
-    }
+            // SAVE THE RGB VALUES
+            loadedImage->SetRGB(i,j,r,g,b);
+        }
 
-  printf ("Random number= %g", nathansrand);
+    printf ("Random number= %g", nathansrand);
     printf(" Finished shifting.\n");
 
     Refresh();
@@ -521,62 +525,62 @@ void MyFrame::Averaging(wxCommandEvent & event){
 	int* averagesumgreen = new int[3000000];
 	int* averagesumblue = new int[3000000];
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=1; i<imgWidth-1; i++)
-	 for(int j=1; j<imgHeight-1; j++)
-	{
-	m1 = loadedImage->GetRed(i-1,j-1) ;
-	m2 = loadedImage->GetRed(i,j-1) ;
-	m3 = loadedImage->GetRed(i+1,j-1) ;
-	m4 = loadedImage->GetRed(i-1, j) ;
-	m5 = loadedImage->GetRed(i, j) ;
-	m6 = loadedImage->GetRed(i+1, j);
-	m7 = loadedImage->GetRed(i-1, j+1) ;
-	m8 = loadedImage->GetRed(i, j+1) ;
-	m9 = loadedImage->GetRed(i+1, j+1) ;
+        for(int j=1; j<imgHeight-1; j++)
+        {
+            m1 = loadedImage->GetRed(i-1,j-1) ;
+            m2 = loadedImage->GetRed(i,j-1) ;
+            m3 = loadedImage->GetRed(i+1,j-1) ;
+            m4 = loadedImage->GetRed(i-1, j) ;
+            m5 = loadedImage->GetRed(i, j) ;
+            m6 = loadedImage->GetRed(i+1, j);
+            m7 = loadedImage->GetRed(i-1, j+1) ;
+            m8 = loadedImage->GetRed(i, j+1) ;
+            m9 = loadedImage->GetRed(i+1, j+1) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counter = m1 + m2 + m3 + m4 + m5 + m6 + m7 + m8 + m9;
-	averagesumred[i] = counter/9;
+            counter = m1 + m2 + m3 + m4 + m5 + m6 + m7 + m8 + m9;
+            averagesumred[i] = counter/9;
 
 //green
 
-	n1 = loadedImage->GetGreen(i-1,j-1) ;
-	n2 = loadedImage->GetGreen(i,j-1) ;
-	n3 = loadedImage->GetGreen(i+1,j-1) ;
-	n4 = loadedImage->GetGreen(i-1, j) ;
-	n5 = loadedImage->GetGreen(i, j) ;
-	n6 = loadedImage->GetGreen(i+1, j);
-	n7 = loadedImage->GetGreen(i-1, j+1) ;
-	n8 = loadedImage->GetGreen(i, j+1) ;
-	n9 = loadedImage->GetGreen(i+1, j+1) ;
+            n1 = loadedImage->GetGreen(i-1,j-1) ;
+            n2 = loadedImage->GetGreen(i,j-1) ;
+            n3 = loadedImage->GetGreen(i+1,j-1) ;
+            n4 = loadedImage->GetGreen(i-1, j) ;
+            n5 = loadedImage->GetGreen(i, j) ;
+            n6 = loadedImage->GetGreen(i+1, j);
+            n7 = loadedImage->GetGreen(i-1, j+1) ;
+            n8 = loadedImage->GetGreen(i, j+1) ;
+            n9 = loadedImage->GetGreen(i+1, j+1) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counter = n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9;
+            counter = n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9;
 
-	averagesumgreen[i] = counter/9;
+            averagesumgreen[i] = counter/9;
 //blue
-	v1 = loadedImage->GetBlue(i-1,j-1) ;
-	v2 = loadedImage->GetBlue(i,j-1) ;
-	v3 = loadedImage->GetBlue(i+1,j-1) ;
-	v4 = loadedImage->GetBlue(i-1, j) ;
-	v5 = loadedImage->GetBlue(i, j) ;
-	v6 = loadedImage->GetBlue(i+1, j);
-	v7 = loadedImage->GetBlue(i-1, j+1) ;
-	v8 = loadedImage->GetBlue(i, j+1) ;
-	v9 = loadedImage->GetBlue(i+1, j+1) ;
+            v1 = loadedImage->GetBlue(i-1,j-1) ;
+            v2 = loadedImage->GetBlue(i,j-1) ;
+            v3 = loadedImage->GetBlue(i+1,j-1) ;
+            v4 = loadedImage->GetBlue(i-1, j) ;
+            v5 = loadedImage->GetBlue(i, j) ;
+            v6 = loadedImage->GetBlue(i+1, j);
+            v7 = loadedImage->GetBlue(i-1, j+1) ;
+            v8 = loadedImage->GetBlue(i, j+1) ;
+            v9 = loadedImage->GetBlue(i+1, j+1) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counter = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 + v9;
+            counter = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 + v9;
 
 
-	averagesumblue[i] = counter/9;
+            averagesumblue[i] = counter/9;
 //	cout << averagesumblue[i] << " ";
-	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
-	}
+            loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
+        }
 
 /*	for(int i=1; i<imgWidth-1; i++)
-	 for(int j=1; j<imgHeight-1; j++)
+    for(int j=1; j<imgHeight-1; j++)
 	{
-	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
-  }  */
+    loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
+    }  */
 
     printf(" Finished average mask.\n");
 
@@ -607,120 +611,120 @@ void MyFrame::Weighted(wxCommandEvent & event){
 //	int* averagesumred = new int[imgWidth][imgHeight];
 //	int* averagesumgreen = new int[imgWidth][imgHeight];
 //	int* averagesumblue = new int[imgWidth][imgHeight];
-int averagesumred [imgWidth][imgHeight];
-int averagesumgreen [imgWidth][imgHeight];
-int averagesumblue [imgWidth][imgHeight];
-int mask [3][3];
+    int averagesumred [imgWidth][imgHeight];
+    int averagesumgreen [imgWidth][imgHeight];
+    int averagesumblue [imgWidth][imgHeight];
+    int mask [3][3];
 
 	int arraycount= 0;
 //	int fgt[3] [3]=new int
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=0; i<imgWidth-1; i++)
-	 for(int j=0; j<imgHeight-1; j++)
-	{
-	mask[0][0] = 1;
-	mask[1][0] = 2;
-	mask[2][0] = 1;
-	mask[0][1] = 2;
-	mask[1][1] = 4;
-	mask[2][1] = 2;
-	mask[0][2] = 1;
-	mask[1][2] = 2;
-	mask[2][2] = 1;
+        for(int j=0; j<imgHeight-1; j++)
+        {
+            mask[0][0] = 1;
+            mask[1][0] = 2;
+            mask[2][0] = 1;
+            mask[0][1] = 2;
+            mask[1][1] = 4;
+            mask[2][1] = 2;
+            mask[0][2] = 1;
+            mask[1][2] = 2;
+            mask[2][2] = 1;
 
 
-	m1 = loadedImage->GetRed(0+i,0+j) ;
-	m2 = loadedImage->GetRed(1+i,j) ;
-	m3 = loadedImage->GetRed(2+i,j) ;
-	m4 = loadedImage->GetRed(0+i, 1+j) ;
-	m5 = loadedImage->GetRed(1+i, 1+j) ;
-	m6 = loadedImage->GetRed(i+2, 1+j);
-	m7 = loadedImage->GetRed(i+0, j+2) ;
-	m8 = loadedImage->GetRed(i+1, j+2) ;
-	m9 = loadedImage->GetRed(i+2, j+2) ;
+            m1 = loadedImage->GetRed(0+i,0+j) ;
+            m2 = loadedImage->GetRed(1+i,j) ;
+            m3 = loadedImage->GetRed(2+i,j) ;
+            m4 = loadedImage->GetRed(0+i, 1+j) ;
+            m5 = loadedImage->GetRed(1+i, 1+j) ;
+            m6 = loadedImage->GetRed(i+2, 1+j);
+            m7 = loadedImage->GetRed(i+0, j+2) ;
+            m8 = loadedImage->GetRed(i+1, j+2) ;
+            m9 = loadedImage->GetRed(i+2, j+2) ;
 //add m1 to m9, then divide by 16 multiply all by weighted average. that'll be average
-	counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
-	averagesumred[i][j] = counterr/16;
-	//cout<<averagesumred[i]<< "  ";
+            counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
+            averagesumred[i][j] = counterr/16;
+            //cout<<averagesumred[i]<< "  ";
 //green
 
 
-	n1 = loadedImage->GetGreen(i,j) ;
-	n2 = loadedImage->GetGreen(i+1,j) ;
-	n3 = loadedImage->GetGreen(i+2,j) ;
-	n4 = loadedImage->GetGreen(i, j+1) ;
-	n5 = loadedImage->GetGreen(i+1, j+1) ;
-	n6 = loadedImage->GetGreen(i+2, j+1);
-	n7 = loadedImage->GetGreen(i, j+2) ;
-	n8 = loadedImage->GetGreen(i+1, j+2) ;
-	n9 = loadedImage->GetGreen(i+2, j+2) ;
+            n1 = loadedImage->GetGreen(i,j) ;
+            n2 = loadedImage->GetGreen(i+1,j) ;
+            n3 = loadedImage->GetGreen(i+2,j) ;
+            n4 = loadedImage->GetGreen(i, j+1) ;
+            n5 = loadedImage->GetGreen(i+1, j+1) ;
+            n6 = loadedImage->GetGreen(i+2, j+1);
+            n7 = loadedImage->GetGreen(i, j+2) ;
+            n8 = loadedImage->GetGreen(i+1, j+2) ;
+            n9 = loadedImage->GetGreen(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
+            counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
 
-	averagesumgreen[i][j] = counterg/16;
+            averagesumgreen[i][j] = counterg/16;
 //blue
 
-	v1 = loadedImage->GetBlue(i,j) ;
-	v2 = loadedImage->GetBlue(i+1,j) ;
-	v3 = loadedImage->GetBlue(i+2,j) ;
-	v4 = loadedImage->GetBlue(i, j+1) ;
-	v5 = loadedImage->GetBlue(i+1, j+1) ;
-	v6 = loadedImage->GetBlue(i+2, j+1);
-	v7 = loadedImage->GetBlue(i, j+2) ;
-	v8 = loadedImage->GetBlue(i+1, j+2) ;
-	v9 = loadedImage->GetBlue(i+2, j+2) ;
+            v1 = loadedImage->GetBlue(i,j) ;
+            v2 = loadedImage->GetBlue(i+1,j) ;
+            v3 = loadedImage->GetBlue(i+2,j) ;
+            v4 = loadedImage->GetBlue(i, j+1) ;
+            v5 = loadedImage->GetBlue(i+1, j+1) ;
+            v6 = loadedImage->GetBlue(i+2, j+1);
+            v7 = loadedImage->GetBlue(i, j+2) ;
+            v8 = loadedImage->GetBlue(i+1, j+2) ;
+            v9 = loadedImage->GetBlue(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
+            counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
 
 //	arraycount+=1;
-	averagesumblue[i][j] = counterb/16;
+            averagesumblue[i][j] = counterb/16;
 //	cout << averagesumblue[i] << " ";
 //	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
 
-	}
+        }
 
 
 	for(int i=0; i<imgWidth; i++)
 	{
 
-	 for(int j=0; j<imgHeight; j++)
-	{
-	if(averagesumred[i][j]<0)
-	{
-	averagesumred[i][j] = 0;
-	}
-	if(averagesumred[i][j]>255)
-	{
-	averagesumred[i][j] = 255;
-	}
-	if(averagesumgreen[i][j]<0)
-	{
-	averagesumgreen[i][j] = 0;
-	}
-	if(averagesumgreen[i][j]>255)
-	{
-	averagesumgreen[i][j] = 255;
-	}
-	if(averagesumblue[i][j]<0)
-	{
-	averagesumblue[i][j] = 0;
-	}
-	if(averagesumblue[i][j]>255)
-	{
-	averagesumblue[i][j] = 255;
-	}
+        for(int j=0; j<imgHeight; j++)
+        {
+            if(averagesumred[i][j]<0)
+            {
+                averagesumred[i][j] = 0;
+            }
+            if(averagesumred[i][j]>255)
+            {
+                averagesumred[i][j] = 255;
+            }
+            if(averagesumgreen[i][j]<0)
+            {
+                averagesumgreen[i][j] = 0;
+            }
+            if(averagesumgreen[i][j]>255)
+            {
+                averagesumgreen[i][j] = 255;
+            }
+            if(averagesumblue[i][j]<0)
+            {
+                averagesumblue[i][j] = 0;
+            }
+            if(averagesumblue[i][j]>255)
+            {
+                averagesumblue[i][j] = 255;
+            }
 
 
 
-	 loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
-	//arraycount++;
-	//cout<<averagesumred[i][j]<< "  ";
-	//cout<<arraycount << "  ";
-	}
+            loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
+            //arraycount++;
+            //cout<<averagesumred[i][j]<< "  ";
+            //cout<<arraycount << "  ";
+        }
 	}
 
-   // cout<<arraycount;
+    // cout<<arraycount;
 
     printf(" Finished weighted averaging.\n");
 
@@ -752,120 +756,120 @@ void MyFrame::FLaplacian(wxCommandEvent & event){
 //	int* averagesumred = new int[imgWidth][imgHeight];
 //	int* averagesumgreen = new int[imgWidth][imgHeight];
 //	int* averagesumblue = new int[imgWidth][imgHeight];
-int averagesumred [imgWidth][imgHeight];
-int averagesumgreen [imgWidth][imgHeight];
-int averagesumblue [imgWidth][imgHeight];
-int mask [3][3];
+    int averagesumred [imgWidth][imgHeight];
+    int averagesumgreen [imgWidth][imgHeight];
+    int averagesumblue [imgWidth][imgHeight];
+    int mask [3][3];
 
 	int arraycount= 0;
 //	int fgt[3] [3]=new int
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=0; i<imgWidth-1; i++)
-	 for(int j=0; j<imgHeight-1; j++)
-	{
-	mask[0][0] = 0;
-	mask[1][0] = -1;
-	mask[2][0] = 0;
-	mask[0][1] = -1;
-	mask[1][1] = 4;
-	mask[2][1] = -1;
-	mask[0][2] = 0;
-	mask[1][2] = -1;
-	mask[2][2] = 0;
+        for(int j=0; j<imgHeight-1; j++)
+        {
+            mask[0][0] = 0;
+            mask[1][0] = -1;
+            mask[2][0] = 0;
+            mask[0][1] = -1;
+            mask[1][1] = 4;
+            mask[2][1] = -1;
+            mask[0][2] = 0;
+            mask[1][2] = -1;
+            mask[2][2] = 0;
 
 
-	m1 = loadedImage->GetRed(0+i,0+j) ;
-	m2 = loadedImage->GetRed(1+i,j) ;
-	m3 = loadedImage->GetRed(2+i,j) ;
-	m4 = loadedImage->GetRed(0+i, 1+j) ;
-	m5 = loadedImage->GetRed(1+i, 1+j) ;
-	m6 = loadedImage->GetRed(i+2, 1+j);
-	m7 = loadedImage->GetRed(i+0, j+2) ;
-	m8 = loadedImage->GetRed(i+1, j+2) ;
-	m9 = loadedImage->GetRed(i+2, j+2) ;
+            m1 = loadedImage->GetRed(0+i,0+j) ;
+            m2 = loadedImage->GetRed(1+i,j) ;
+            m3 = loadedImage->GetRed(2+i,j) ;
+            m4 = loadedImage->GetRed(0+i, 1+j) ;
+            m5 = loadedImage->GetRed(1+i, 1+j) ;
+            m6 = loadedImage->GetRed(i+2, 1+j);
+            m7 = loadedImage->GetRed(i+0, j+2) ;
+            m8 = loadedImage->GetRed(i+1, j+2) ;
+            m9 = loadedImage->GetRed(i+2, j+2) ;
 //add m1 to m9, then divide by 16 multiply all by weighted average. that'll be average
-	counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
-	averagesumred[i][j] = counterr;
-	//cout<<averagesumred[i]<< "  ";
+            counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
+            averagesumred[i][j] = counterr;
+            //cout<<averagesumred[i]<< "  ";
 //green
 
 
-	n1 = loadedImage->GetGreen(i,j) ;
-	n2 = loadedImage->GetGreen(i+1,j) ;
-	n3 = loadedImage->GetGreen(i+2,j) ;
-	n4 = loadedImage->GetGreen(i, j+1) ;
-	n5 = loadedImage->GetGreen(i+1, j+1) ;
-	n6 = loadedImage->GetGreen(i+2, j+1);
-	n7 = loadedImage->GetGreen(i, j+2) ;
-	n8 = loadedImage->GetGreen(i+1, j+2) ;
-	n9 = loadedImage->GetGreen(i+2, j+2) ;
+            n1 = loadedImage->GetGreen(i,j) ;
+            n2 = loadedImage->GetGreen(i+1,j) ;
+            n3 = loadedImage->GetGreen(i+2,j) ;
+            n4 = loadedImage->GetGreen(i, j+1) ;
+            n5 = loadedImage->GetGreen(i+1, j+1) ;
+            n6 = loadedImage->GetGreen(i+2, j+1);
+            n7 = loadedImage->GetGreen(i, j+2) ;
+            n8 = loadedImage->GetGreen(i+1, j+2) ;
+            n9 = loadedImage->GetGreen(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
+            counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
 
-	averagesumgreen[i][j] = counterg;
+            averagesumgreen[i][j] = counterg;
 //blue
 
-	v1 = loadedImage->GetBlue(i,j) ;
-	v2 = loadedImage->GetBlue(i+1,j) ;
-	v3 = loadedImage->GetBlue(i+2,j) ;
-	v4 = loadedImage->GetBlue(i, j+1) ;
-	v5 = loadedImage->GetBlue(i+1, j+1) ;
-	v6 = loadedImage->GetBlue(i+2, j+1);
-	v7 = loadedImage->GetBlue(i, j+2) ;
-	v8 = loadedImage->GetBlue(i+1, j+2) ;
-	v9 = loadedImage->GetBlue(i+2, j+2) ;
+            v1 = loadedImage->GetBlue(i,j) ;
+            v2 = loadedImage->GetBlue(i+1,j) ;
+            v3 = loadedImage->GetBlue(i+2,j) ;
+            v4 = loadedImage->GetBlue(i, j+1) ;
+            v5 = loadedImage->GetBlue(i+1, j+1) ;
+            v6 = loadedImage->GetBlue(i+2, j+1);
+            v7 = loadedImage->GetBlue(i, j+2) ;
+            v8 = loadedImage->GetBlue(i+1, j+2) ;
+            v9 = loadedImage->GetBlue(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
+            counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
 
 //	arraycount+=1;
-	averagesumblue[i][j] = counterb;
+            averagesumblue[i][j] = counterb;
 //	cout << averagesumblue[i] << " ";
 //	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
 
-	}
+        }
 
 
 	for(int i=0; i<imgWidth; i++)
 	{
 
-	 for(int j=0; j<imgHeight; j++)
-	{
-	if(averagesumred[i][j]<0)
-	{
-	averagesumred[i][j] = 0;
-	}
-	if(averagesumred[i][j]>255)
-	{
-	averagesumred[i][j] = 255;
-	}
-	if(averagesumgreen[i][j]<0)
-	{
-	averagesumgreen[i][j] = 0;
-	}
-	if(averagesumgreen[i][j]>255)
-	{
-	averagesumgreen[i][j] = 255;
-	}
-	if(averagesumblue[i][j]<0)
-	{
-	averagesumblue[i][j] = 0;
-	}
-	if(averagesumblue[i][j]>255)
-	{
-	averagesumblue[i][j] = 255;
-	}
+        for(int j=0; j<imgHeight; j++)
+        {
+            if(averagesumred[i][j]<0)
+            {
+                averagesumred[i][j] = 0;
+            }
+            if(averagesumred[i][j]>255)
+            {
+                averagesumred[i][j] = 255;
+            }
+            if(averagesumgreen[i][j]<0)
+            {
+                averagesumgreen[i][j] = 0;
+            }
+            if(averagesumgreen[i][j]>255)
+            {
+                averagesumgreen[i][j] = 255;
+            }
+            if(averagesumblue[i][j]<0)
+            {
+                averagesumblue[i][j] = 0;
+            }
+            if(averagesumblue[i][j]>255)
+            {
+                averagesumblue[i][j] = 255;
+            }
 
 
 
-	 loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
-	//arraycount++;
+            loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
+            //arraycount++;
 //	cout<<averagesumred[i][j]<< "  ";
-	//cout<<arraycount << "  ";
-	}
+            //cout<<arraycount << "  ";
+        }
 	}
 
-   // cout<<arraycount;
+    // cout<<arraycount;
 
     printf(" Finished 4 neighbour laplacian.\n");
 
@@ -898,120 +902,120 @@ void MyFrame::ELaplacian(wxCommandEvent & event){
 //	int* averagesumred = new int[imgWidth][imgHeight];
 //	int* averagesumgreen = new int[imgWidth][imgHeight];
 //	int* averagesumblue = new int[imgWidth][imgHeight];
-int averagesumred [imgWidth][imgHeight];
-int averagesumgreen [imgWidth][imgHeight];
-int averagesumblue [imgWidth][imgHeight];
-int mask [3][3];
+    int averagesumred [imgWidth][imgHeight];
+    int averagesumgreen [imgWidth][imgHeight];
+    int averagesumblue [imgWidth][imgHeight];
+    int mask [3][3];
 
 	int arraycount= 0;
 //	int fgt[3] [3]=new int
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=0; i<imgWidth-1; i++)
-	 for(int j=0; j<imgHeight-1; j++)
-	{
-	mask[0][0] = -1;
-	mask[1][0] = -1;
-	mask[2][0] = -1;
-	mask[0][1] = -1;
-	mask[1][1] = 8;
-	mask[2][1] = -1;
-	mask[0][2] = -1;
-	mask[1][2] = -1;
-	mask[2][2] = -1;
+        for(int j=0; j<imgHeight-1; j++)
+        {
+            mask[0][0] = -1;
+            mask[1][0] = -1;
+            mask[2][0] = -1;
+            mask[0][1] = -1;
+            mask[1][1] = 8;
+            mask[2][1] = -1;
+            mask[0][2] = -1;
+            mask[1][2] = -1;
+            mask[2][2] = -1;
 
 
-	m1 = loadedImage->GetRed(0+i,0+j) ;
-	m2 = loadedImage->GetRed(1+i,j) ;
-	m3 = loadedImage->GetRed(2+i,j) ;
-	m4 = loadedImage->GetRed(0+i, 1+j) ;
-	m5 = loadedImage->GetRed(1+i, 1+j) ;
-	m6 = loadedImage->GetRed(i+2, 1+j);
-	m7 = loadedImage->GetRed(i+0, j+2) ;
-	m8 = loadedImage->GetRed(i+1, j+2) ;
-	m9 = loadedImage->GetRed(i+2, j+2) ;
+            m1 = loadedImage->GetRed(0+i,0+j) ;
+            m2 = loadedImage->GetRed(1+i,j) ;
+            m3 = loadedImage->GetRed(2+i,j) ;
+            m4 = loadedImage->GetRed(0+i, 1+j) ;
+            m5 = loadedImage->GetRed(1+i, 1+j) ;
+            m6 = loadedImage->GetRed(i+2, 1+j);
+            m7 = loadedImage->GetRed(i+0, j+2) ;
+            m8 = loadedImage->GetRed(i+1, j+2) ;
+            m9 = loadedImage->GetRed(i+2, j+2) ;
 //add m1 to m9, then divide by 16 multiply all by weighted average. that'll be average
-	counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
-	averagesumred[i][j] = counterr;
-	//cout<<averagesumred[i]<< "  ";
+            counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
+            averagesumred[i][j] = counterr;
+            //cout<<averagesumred[i]<< "  ";
 //green
 
 
-	n1 = loadedImage->GetGreen(i,j) ;
-	n2 = loadedImage->GetGreen(i+1,j) ;
-	n3 = loadedImage->GetGreen(i+2,j) ;
-	n4 = loadedImage->GetGreen(i, j+1) ;
-	n5 = loadedImage->GetGreen(i+1, j+1) ;
-	n6 = loadedImage->GetGreen(i+2, j+1);
-	n7 = loadedImage->GetGreen(i, j+2) ;
-	n8 = loadedImage->GetGreen(i+1, j+2) ;
-	n9 = loadedImage->GetGreen(i+2, j+2) ;
+            n1 = loadedImage->GetGreen(i,j) ;
+            n2 = loadedImage->GetGreen(i+1,j) ;
+            n3 = loadedImage->GetGreen(i+2,j) ;
+            n4 = loadedImage->GetGreen(i, j+1) ;
+            n5 = loadedImage->GetGreen(i+1, j+1) ;
+            n6 = loadedImage->GetGreen(i+2, j+1);
+            n7 = loadedImage->GetGreen(i, j+2) ;
+            n8 = loadedImage->GetGreen(i+1, j+2) ;
+            n9 = loadedImage->GetGreen(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
+            counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
 
-	averagesumgreen[i][j] = counterg;
+            averagesumgreen[i][j] = counterg;
 //blue
 
-	v1 = loadedImage->GetBlue(i,j) ;
-	v2 = loadedImage->GetBlue(i+1,j) ;
-	v3 = loadedImage->GetBlue(i+2,j) ;
-	v4 = loadedImage->GetBlue(i, j+1) ;
-	v5 = loadedImage->GetBlue(i+1, j+1) ;
-	v6 = loadedImage->GetBlue(i+2, j+1);
-	v7 = loadedImage->GetBlue(i, j+2) ;
-	v8 = loadedImage->GetBlue(i+1, j+2) ;
-	v9 = loadedImage->GetBlue(i+2, j+2) ;
+            v1 = loadedImage->GetBlue(i,j) ;
+            v2 = loadedImage->GetBlue(i+1,j) ;
+            v3 = loadedImage->GetBlue(i+2,j) ;
+            v4 = loadedImage->GetBlue(i, j+1) ;
+            v5 = loadedImage->GetBlue(i+1, j+1) ;
+            v6 = loadedImage->GetBlue(i+2, j+1);
+            v7 = loadedImage->GetBlue(i, j+2) ;
+            v8 = loadedImage->GetBlue(i+1, j+2) ;
+            v9 = loadedImage->GetBlue(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
+            counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
 
 //	arraycount+=1;
-	averagesumblue[i][j] = counterb;
+            averagesumblue[i][j] = counterb;
 //	cout << averagesumblue[i] << " ";
 //	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
 
-	}
+        }
 
 
 	for(int i=0; i<imgWidth; i++)
 	{
 
-	 for(int j=0; j<imgHeight; j++)
-	{
-	if(averagesumred[i][j]<0)
-	{
-	averagesumred[i][j] = 0;
-	}
-	if(averagesumred[i][j]>255)
-	{
-	averagesumred[i][j] = 255;
-	}
-	if(averagesumgreen[i][j]<0)
-	{
-	averagesumgreen[i][j] = 0;
-	}
-	if(averagesumgreen[i][j]>255)
-	{
-	averagesumgreen[i][j] = 255;
-	}
-	if(averagesumblue[i][j]<0)
-	{
-	averagesumblue[i][j] = 0;
-	}
-	if(averagesumblue[i][j]>255)
-	{
-	averagesumblue[i][j] = 255;
-	}
+        for(int j=0; j<imgHeight; j++)
+        {
+            if(averagesumred[i][j]<0)
+            {
+                averagesumred[i][j] = 0;
+            }
+            if(averagesumred[i][j]>255)
+            {
+                averagesumred[i][j] = 255;
+            }
+            if(averagesumgreen[i][j]<0)
+            {
+                averagesumgreen[i][j] = 0;
+            }
+            if(averagesumgreen[i][j]>255)
+            {
+                averagesumgreen[i][j] = 255;
+            }
+            if(averagesumblue[i][j]<0)
+            {
+                averagesumblue[i][j] = 0;
+            }
+            if(averagesumblue[i][j]>255)
+            {
+                averagesumblue[i][j] = 255;
+            }
 
 
 
-	 loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
-	//arraycount++;
-	//cout<<averagesumred[i][j]<< "  ";
-	//cout<<arraycount << "  ";
-	}
+            loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
+            //arraycount++;
+            //cout<<averagesumred[i][j]<< "  ";
+            //cout<<arraycount << "  ";
+        }
 	}
 
-   // cout<<arraycount;
+    // cout<<arraycount;
 
     printf(" Finished 8 neighbour laplacian.\n");
 
@@ -1045,120 +1049,120 @@ void MyFrame::FLaplacianE(wxCommandEvent & event){
 //	int* averagesumred = new int[imgWidth][imgHeight];
 //	int* averagesumgreen = new int[imgWidth][imgHeight];
 //	int* averagesumblue = new int[imgWidth][imgHeight];
-int averagesumred [imgWidth][imgHeight];
-int averagesumgreen [imgWidth][imgHeight];
-int averagesumblue [imgWidth][imgHeight];
-int mask [3][3];
+    int averagesumred [imgWidth][imgHeight];
+    int averagesumgreen [imgWidth][imgHeight];
+    int averagesumblue [imgWidth][imgHeight];
+    int mask [3][3];
 
 	int arraycount= 0;
 //	int fgt[3] [3]=new int
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=0; i<imgWidth-1; i++)
-	 for(int j=0; j<imgHeight-1; j++)
-	{
-	mask[0][0] = 0;
-	mask[1][0] = -1;
-	mask[2][0] = 0;
-	mask[0][1] = -1;
-	mask[1][1] = 5;
-	mask[2][1] = -1;
-	mask[0][2] = 0;
-	mask[1][2] = -1;
-	mask[2][2] = 0;
+        for(int j=0; j<imgHeight-1; j++)
+        {
+            mask[0][0] = 0;
+            mask[1][0] = -1;
+            mask[2][0] = 0;
+            mask[0][1] = -1;
+            mask[1][1] = 5;
+            mask[2][1] = -1;
+            mask[0][2] = 0;
+            mask[1][2] = -1;
+            mask[2][2] = 0;
 
 
-	m1 = loadedImage->GetRed(0+i,0+j) ;
-	m2 = loadedImage->GetRed(1+i,j) ;
-	m3 = loadedImage->GetRed(2+i,j) ;
-	m4 = loadedImage->GetRed(0+i, 1+j) ;
-	m5 = loadedImage->GetRed(1+i, 1+j) ;
-	m6 = loadedImage->GetRed(i+2, 1+j);
-	m7 = loadedImage->GetRed(i+0, j+2) ;
-	m8 = loadedImage->GetRed(i+1, j+2) ;
-	m9 = loadedImage->GetRed(i+2, j+2) ;
+            m1 = loadedImage->GetRed(0+i,0+j) ;
+            m2 = loadedImage->GetRed(1+i,j) ;
+            m3 = loadedImage->GetRed(2+i,j) ;
+            m4 = loadedImage->GetRed(0+i, 1+j) ;
+            m5 = loadedImage->GetRed(1+i, 1+j) ;
+            m6 = loadedImage->GetRed(i+2, 1+j);
+            m7 = loadedImage->GetRed(i+0, j+2) ;
+            m8 = loadedImage->GetRed(i+1, j+2) ;
+            m9 = loadedImage->GetRed(i+2, j+2) ;
 //add m1 to m9, then divide by 16 multiply all by weighted average. that'll be average
-	counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
-	averagesumred[i][j] = counterr;
-	//cout<<averagesumred[i]<< "  ";
+            counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
+            averagesumred[i][j] = counterr;
+            //cout<<averagesumred[i]<< "  ";
 //green
 
 
-	n1 = loadedImage->GetGreen(i,j) ;
-	n2 = loadedImage->GetGreen(i+1,j) ;
-	n3 = loadedImage->GetGreen(i+2,j) ;
-	n4 = loadedImage->GetGreen(i, j+1) ;
-	n5 = loadedImage->GetGreen(i+1, j+1) ;
-	n6 = loadedImage->GetGreen(i+2, j+1);
-	n7 = loadedImage->GetGreen(i, j+2) ;
-	n8 = loadedImage->GetGreen(i+1, j+2) ;
-	n9 = loadedImage->GetGreen(i+2, j+2) ;
+            n1 = loadedImage->GetGreen(i,j) ;
+            n2 = loadedImage->GetGreen(i+1,j) ;
+            n3 = loadedImage->GetGreen(i+2,j) ;
+            n4 = loadedImage->GetGreen(i, j+1) ;
+            n5 = loadedImage->GetGreen(i+1, j+1) ;
+            n6 = loadedImage->GetGreen(i+2, j+1);
+            n7 = loadedImage->GetGreen(i, j+2) ;
+            n8 = loadedImage->GetGreen(i+1, j+2) ;
+            n9 = loadedImage->GetGreen(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
+            counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
 
-	averagesumgreen[i][j] = counterg;
+            averagesumgreen[i][j] = counterg;
 //blue
 
-	v1 = loadedImage->GetBlue(i,j) ;
-	v2 = loadedImage->GetBlue(i+1,j) ;
-	v3 = loadedImage->GetBlue(i+2,j) ;
-	v4 = loadedImage->GetBlue(i, j+1) ;
-	v5 = loadedImage->GetBlue(i+1, j+1) ;
-	v6 = loadedImage->GetBlue(i+2, j+1);
-	v7 = loadedImage->GetBlue(i, j+2) ;
-	v8 = loadedImage->GetBlue(i+1, j+2) ;
-	v9 = loadedImage->GetBlue(i+2, j+2) ;
+            v1 = loadedImage->GetBlue(i,j) ;
+            v2 = loadedImage->GetBlue(i+1,j) ;
+            v3 = loadedImage->GetBlue(i+2,j) ;
+            v4 = loadedImage->GetBlue(i, j+1) ;
+            v5 = loadedImage->GetBlue(i+1, j+1) ;
+            v6 = loadedImage->GetBlue(i+2, j+1);
+            v7 = loadedImage->GetBlue(i, j+2) ;
+            v8 = loadedImage->GetBlue(i+1, j+2) ;
+            v9 = loadedImage->GetBlue(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
+            counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
 
 //	arraycount+=1;
-	averagesumblue[i][j] = counterb;
+            averagesumblue[i][j] = counterb;
 //	cout << averagesumblue[i] << " ";
 //	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
 
-	}
+        }
 
 
 	for(int i=0; i<imgWidth; i++)
 	{
 
-	 for(int j=0; j<imgHeight; j++)
-	{
-	if(averagesumred[i][j]<0)
-	{
-	averagesumred[i][j] = 0;
-	}
-	if(averagesumred[i][j]>255)
-	{
-	averagesumred[i][j] = 255;
-	}
-	if(averagesumgreen[i][j]<0)
-	{
-	averagesumgreen[i][j] = 0;
-	}
-	if(averagesumgreen[i][j]>255)
-	{
-	averagesumgreen[i][j] = 255;
-	}
-	if(averagesumblue[i][j]<0)
-	{
-	averagesumblue[i][j] = 0;
-	}
-	if(averagesumblue[i][j]>255)
-	{
-	averagesumblue[i][j] = 255;
-	}
+        for(int j=0; j<imgHeight; j++)
+        {
+            if(averagesumred[i][j]<0)
+            {
+                averagesumred[i][j] = 0;
+            }
+            if(averagesumred[i][j]>255)
+            {
+                averagesumred[i][j] = 255;
+            }
+            if(averagesumgreen[i][j]<0)
+            {
+                averagesumgreen[i][j] = 0;
+            }
+            if(averagesumgreen[i][j]>255)
+            {
+                averagesumgreen[i][j] = 255;
+            }
+            if(averagesumblue[i][j]<0)
+            {
+                averagesumblue[i][j] = 0;
+            }
+            if(averagesumblue[i][j]>255)
+            {
+                averagesumblue[i][j] = 255;
+            }
 
 
 
-	 loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
-	//arraycount++;
-	//cout<<averagesumred[i][j]<< "  ";
-	//cout<<arraycount << "  ";
-	}
+            loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
+            //arraycount++;
+            //cout<<averagesumred[i][j]<< "  ";
+            //cout<<arraycount << "  ";
+        }
 	}
 
-   // cout<<arraycount;
+    // cout<<arraycount;
 
     printf(" Finished 4 neighbour enhanced laplacian.\n");
 
@@ -1192,120 +1196,120 @@ void MyFrame::ELaplacianE(wxCommandEvent & event){
 //	int* averagesumred = new int[imgWidth][imgHeight];
 //	int* averagesumgreen = new int[imgWidth][imgHeight];
 //	int* averagesumblue = new int[imgWidth][imgHeight];
-int averagesumred [imgWidth][imgHeight];
-int averagesumgreen [imgWidth][imgHeight];
-int averagesumblue [imgWidth][imgHeight];
-int mask [3][3];
+    int averagesumred [imgWidth][imgHeight];
+    int averagesumgreen [imgWidth][imgHeight];
+    int averagesumblue [imgWidth][imgHeight];
+    int mask [3][3];
 
 	int arraycount= 0;
 //	int fgt[3] [3]=new int
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=0; i<imgWidth-1; i++)
-	 for(int j=0; j<imgHeight-1; j++)
-	{
-	mask[0][0] = -1;
-	mask[1][0] = -1;
-	mask[2][0] = -1;
-	mask[0][1] = -1;
-	mask[1][1] = 9;
-	mask[2][1] = -1;
-	mask[0][2] = -1;
-	mask[1][2] = -1;
-	mask[2][2] = -1;
+        for(int j=0; j<imgHeight-1; j++)
+        {
+            mask[0][0] = -1;
+            mask[1][0] = -1;
+            mask[2][0] = -1;
+            mask[0][1] = -1;
+            mask[1][1] = 9;
+            mask[2][1] = -1;
+            mask[0][2] = -1;
+            mask[1][2] = -1;
+            mask[2][2] = -1;
 
 
-	m1 = loadedImage->GetRed(0+i,0+j) ;
-	m2 = loadedImage->GetRed(1+i,j) ;
-	m3 = loadedImage->GetRed(2+i,j) ;
-	m4 = loadedImage->GetRed(0+i, 1+j) ;
-	m5 = loadedImage->GetRed(1+i, 1+j) ;
-	m6 = loadedImage->GetRed(i+2, 1+j);
-	m7 = loadedImage->GetRed(i+0, j+2) ;
-	m8 = loadedImage->GetRed(i+1, j+2) ;
-	m9 = loadedImage->GetRed(i+2, j+2) ;
+            m1 = loadedImage->GetRed(0+i,0+j) ;
+            m2 = loadedImage->GetRed(1+i,j) ;
+            m3 = loadedImage->GetRed(2+i,j) ;
+            m4 = loadedImage->GetRed(0+i, 1+j) ;
+            m5 = loadedImage->GetRed(1+i, 1+j) ;
+            m6 = loadedImage->GetRed(i+2, 1+j);
+            m7 = loadedImage->GetRed(i+0, j+2) ;
+            m8 = loadedImage->GetRed(i+1, j+2) ;
+            m9 = loadedImage->GetRed(i+2, j+2) ;
 //add m1 to m9, then divide by 16 multiply all by weighted average. that'll be average
-	counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
-	averagesumred[i][j] = counterr;
-	//cout<<averagesumred[i]<< "  ";
+            counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
+            averagesumred[i][j] = counterr;
+            //cout<<averagesumred[i]<< "  ";
 //green
 
 
-	n1 = loadedImage->GetGreen(i,j) ;
-	n2 = loadedImage->GetGreen(i+1,j) ;
-	n3 = loadedImage->GetGreen(i+2,j) ;
-	n4 = loadedImage->GetGreen(i, j+1) ;
-	n5 = loadedImage->GetGreen(i+1, j+1) ;
-	n6 = loadedImage->GetGreen(i+2, j+1);
-	n7 = loadedImage->GetGreen(i, j+2) ;
-	n8 = loadedImage->GetGreen(i+1, j+2) ;
-	n9 = loadedImage->GetGreen(i+2, j+2) ;
+            n1 = loadedImage->GetGreen(i,j) ;
+            n2 = loadedImage->GetGreen(i+1,j) ;
+            n3 = loadedImage->GetGreen(i+2,j) ;
+            n4 = loadedImage->GetGreen(i, j+1) ;
+            n5 = loadedImage->GetGreen(i+1, j+1) ;
+            n6 = loadedImage->GetGreen(i+2, j+1);
+            n7 = loadedImage->GetGreen(i, j+2) ;
+            n8 = loadedImage->GetGreen(i+1, j+2) ;
+            n9 = loadedImage->GetGreen(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
+            counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
 
-	averagesumgreen[i][j] = counterg;
+            averagesumgreen[i][j] = counterg;
 //blue
 
-	v1 = loadedImage->GetBlue(i,j) ;
-	v2 = loadedImage->GetBlue(i+1,j) ;
-	v3 = loadedImage->GetBlue(i+2,j) ;
-	v4 = loadedImage->GetBlue(i, j+1) ;
-	v5 = loadedImage->GetBlue(i+1, j+1) ;
-	v6 = loadedImage->GetBlue(i+2, j+1);
-	v7 = loadedImage->GetBlue(i, j+2) ;
-	v8 = loadedImage->GetBlue(i+1, j+2) ;
-	v9 = loadedImage->GetBlue(i+2, j+2) ;
+            v1 = loadedImage->GetBlue(i,j) ;
+            v2 = loadedImage->GetBlue(i+1,j) ;
+            v3 = loadedImage->GetBlue(i+2,j) ;
+            v4 = loadedImage->GetBlue(i, j+1) ;
+            v5 = loadedImage->GetBlue(i+1, j+1) ;
+            v6 = loadedImage->GetBlue(i+2, j+1);
+            v7 = loadedImage->GetBlue(i, j+2) ;
+            v8 = loadedImage->GetBlue(i+1, j+2) ;
+            v9 = loadedImage->GetBlue(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
+            counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
 
 //	arraycount+=1;
-	averagesumblue[i][j] = counterb;
+            averagesumblue[i][j] = counterb;
 //	cout << averagesumblue[i] << " ";
 //	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
 
-	}
+        }
 
 
 	for(int i=0; i<imgWidth; i++)
 	{
 
-	 for(int j=0; j<imgHeight; j++)
-	{
-	if(averagesumred[i][j]<0)
-	{
-	averagesumred[i][j] = 0;
-	}
-	if(averagesumred[i][j]>255)
-	{
-	averagesumred[i][j] = 255;
-	}
-	if(averagesumgreen[i][j]<0)
-	{
-	averagesumgreen[i][j] = 0;
-	}
-	if(averagesumgreen[i][j]>255)
-	{
-	averagesumgreen[i][j] = 255;
-	}
-	if(averagesumblue[i][j]<0)
-	{
-	averagesumblue[i][j] = 0;
-	}
-	if(averagesumblue[i][j]>255)
-	{
-	averagesumblue[i][j] = 255;
-	}
+        for(int j=0; j<imgHeight; j++)
+        {
+            if(averagesumred[i][j]<0)
+            {
+                averagesumred[i][j] = 0;
+            }
+            if(averagesumred[i][j]>255)
+            {
+                averagesumred[i][j] = 255;
+            }
+            if(averagesumgreen[i][j]<0)
+            {
+                averagesumgreen[i][j] = 0;
+            }
+            if(averagesumgreen[i][j]>255)
+            {
+                averagesumgreen[i][j] = 255;
+            }
+            if(averagesumblue[i][j]<0)
+            {
+                averagesumblue[i][j] = 0;
+            }
+            if(averagesumblue[i][j]>255)
+            {
+                averagesumblue[i][j] = 255;
+            }
 
 
 
-	 loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
-	//arraycount++;
-	//cout<<averagesumred[i][j]<< "  ";
-	//cout<<arraycount << "  ";
-	}
+            loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
+            //arraycount++;
+            //cout<<averagesumred[i][j]<< "  ";
+            //cout<<arraycount << "  ";
+        }
 	}
 
-   // cout<<arraycount;
+    // cout<<arraycount;
 
     printf(" Finished 8 neighbour laplacian enhanced.\n");
 
@@ -1341,152 +1345,152 @@ void MyFrame::Roberts(wxCommandEvent & event){
 //	int* averagesumred = new int[imgWidth][imgHeight];
 //	int* averagesumgreen = new int[imgWidth][imgHeight];
 //	int* averagesumblue = new int[imgWidth][imgHeight];
-int averagesumred [imgWidth][imgHeight];
-int averagesumgreen [imgWidth][imgHeight];
-int averagesumblue [imgWidth][imgHeight];
+    int averagesumred [imgWidth][imgHeight];
+    int averagesumgreen [imgWidth][imgHeight];
+    int averagesumblue [imgWidth][imgHeight];
 
 
-int mask [3][3];
-int mask2 [3][3];
-int mask3 [3][3];
+    int mask [3][3];
+    int mask2 [3][3];
+    int mask3 [3][3];
 
 //	int arraycount= 0;
 //	int fgt[3] [3]=new int
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=0; i<imgWidth-1; i++)
-	 for(int j=0; j<imgHeight-1; j++)
-	{
-	mask[0][0] = 0;
-	mask[1][0] = 0;
-	mask[2][0] = 0;
-	mask[0][1] = 0;
-	mask[1][1] = 0;
-	mask[2][1] = -1;
-	mask[0][2] = 0;
-	mask[1][2] = 1;
-	mask[2][2] = 0;
+        for(int j=0; j<imgHeight-1; j++)
+        {
+            mask[0][0] = 0;
+            mask[1][0] = 0;
+            mask[2][0] = 0;
+            mask[0][1] = 0;
+            mask[1][1] = 0;
+            mask[2][1] = -1;
+            mask[0][2] = 0;
+            mask[1][2] = 1;
+            mask[2][2] = 0;
 //second mask
-	mask2[0][0] = 0;
-	mask2[1][0] = 0;
-	mask2[2][0] = 0;
-	mask2[0][1] = 0;
-	mask2[1][1] = -1;
-	mask2[2][1] = 0;
-	mask2[0][2] = 0;
-	mask2[1][2] = 0;
-	mask2[2][2] = 1;
+            mask2[0][0] = 0;
+            mask2[1][0] = 0;
+            mask2[2][0] = 0;
+            mask2[0][1] = 0;
+            mask2[1][1] = -1;
+            mask2[2][1] = 0;
+            mask2[0][2] = 0;
+            mask2[1][2] = 0;
+            mask2[2][2] = 1;
 
 //add masks together
-	mask3[0][0] = mask[0][0]+mask2[0][0];
-	mask3[1][0] = mask[1][0]+mask2[1][0];
-	mask3[2][0] = mask[2][0]+mask2[2][0];
-	mask3[0][1] = mask[0][1]+mask2[0][1];
-	mask3[1][1] = mask[1][1]+mask2[1][1];
-	mask3[2][1] = mask[2][1]+mask2[2][1];
-	mask3[0][2] = mask[0][2]+mask2[0][2];
-	mask3[1][2] = mask[1][2]+mask2[1][2];
-	mask3[2][2] = mask[2][2]+mask2[2][2];
+            mask3[0][0] = mask[0][0]+mask2[0][0];
+            mask3[1][0] = mask[1][0]+mask2[1][0];
+            mask3[2][0] = mask[2][0]+mask2[2][0];
+            mask3[0][1] = mask[0][1]+mask2[0][1];
+            mask3[1][1] = mask[1][1]+mask2[1][1];
+            mask3[2][1] = mask[2][1]+mask2[2][1];
+            mask3[0][2] = mask[0][2]+mask2[0][2];
+            mask3[1][2] = mask[1][2]+mask2[1][2];
+            mask3[2][2] = mask[2][2]+mask2[2][2];
 //red 1st roberts
-	m1 = loadedImage->GetRed(0+i,0+j) ;
-	m2 = loadedImage->GetRed(1+i,j) ;
-	m3 = loadedImage->GetRed(2+i,j) ;
-	m4 = loadedImage->GetRed(0+i, 1+j) ;
-	m5 = loadedImage->GetRed(1+i, 1+j) ;
-	m6 = loadedImage->GetRed(i+2, 1+j);
-	m7 = loadedImage->GetRed(i+0, j+2) ;
-	m8 = loadedImage->GetRed(i+1, j+2) ;
-	m9 = loadedImage->GetRed(i+2, j+2) ;
+            m1 = loadedImage->GetRed(0+i,0+j) ;
+            m2 = loadedImage->GetRed(1+i,j) ;
+            m3 = loadedImage->GetRed(2+i,j) ;
+            m4 = loadedImage->GetRed(0+i, 1+j) ;
+            m5 = loadedImage->GetRed(1+i, 1+j) ;
+            m6 = loadedImage->GetRed(i+2, 1+j);
+            m7 = loadedImage->GetRed(i+0, j+2) ;
+            m8 = loadedImage->GetRed(i+1, j+2) ;
+            m9 = loadedImage->GetRed(i+2, j+2) ;
 
-	counterr = m1*mask3[0][0] + m2*mask3[1][0] + m3*mask3[2][0] + m4*mask3[0][1] + m5*mask3[1][1] + m6*mask3[2][1] + m7*mask3[0][2] + m8*mask3[1][2] + m9*mask3[2][2];
+            counterr = m1*mask3[0][0] + m2*mask3[1][0] + m3*mask3[2][0] + m4*mask3[0][1] + m5*mask3[1][1] + m6*mask3[2][1] + m7*mask3[0][2] + m8*mask3[1][2] + m9*mask3[2][2];
 
-averagesumred[i][j] = counterr;
+            averagesumred[i][j] = counterr;
 
 
 
 //green
 
 
-	n1 = loadedImage->GetGreen(i,j) ;
-	n2 = loadedImage->GetGreen(i+1,j) ;
-	n3 = loadedImage->GetGreen(i+2,j) ;
-	n4 = loadedImage->GetGreen(i, j+1) ;
-	n5 = loadedImage->GetGreen(i+1, j+1) ;
-	n6 = loadedImage->GetGreen(i+2, j+1);
-	n7 = loadedImage->GetGreen(i, j+2) ;
-	n8 = loadedImage->GetGreen(i+1, j+2) ;
-	n9 = loadedImage->GetGreen(i+2, j+2) ;
+            n1 = loadedImage->GetGreen(i,j) ;
+            n2 = loadedImage->GetGreen(i+1,j) ;
+            n3 = loadedImage->GetGreen(i+2,j) ;
+            n4 = loadedImage->GetGreen(i, j+1) ;
+            n5 = loadedImage->GetGreen(i+1, j+1) ;
+            n6 = loadedImage->GetGreen(i+2, j+1);
+            n7 = loadedImage->GetGreen(i, j+2) ;
+            n8 = loadedImage->GetGreen(i+1, j+2) ;
+            n9 = loadedImage->GetGreen(i+2, j+2) ;
 
-	counterg = n1*mask3[0][0] + n2*mask3[1][0] + n3*mask3[2][0] + n4*mask3[0][1] + n5*mask3[1][1] + n6*mask3[2][1] + n7*mask3[0][2] + n8*mask3[1][2] + n9*mask3[2][2];
+            counterg = n1*mask3[0][0] + n2*mask3[1][0] + n3*mask3[2][0] + n4*mask3[0][1] + n5*mask3[1][1] + n6*mask3[2][1] + n7*mask3[0][2] + n8*mask3[1][2] + n9*mask3[2][2];
 
-	averagesumgreen[i][j] = counterg;
+            averagesumgreen[i][j] = counterg;
 
 
 //blue
 
-	v1 = loadedImage->GetBlue(i,j) ;
-	v2 = loadedImage->GetBlue(i+1,j) ;
-	v3 = loadedImage->GetBlue(i+2,j) ;
-	v4 = loadedImage->GetBlue(i, j+1) ;
-	v5 = loadedImage->GetBlue(i+1, j+1) ;
-	v6 = loadedImage->GetBlue(i+2, j+1);
-	v7 = loadedImage->GetBlue(i, j+2) ;
-	v8 = loadedImage->GetBlue(i+1, j+2) ;
-	v9 = loadedImage->GetBlue(i+2, j+2) ;
+            v1 = loadedImage->GetBlue(i,j) ;
+            v2 = loadedImage->GetBlue(i+1,j) ;
+            v3 = loadedImage->GetBlue(i+2,j) ;
+            v4 = loadedImage->GetBlue(i, j+1) ;
+            v5 = loadedImage->GetBlue(i+1, j+1) ;
+            v6 = loadedImage->GetBlue(i+2, j+1);
+            v7 = loadedImage->GetBlue(i, j+2) ;
+            v8 = loadedImage->GetBlue(i+1, j+2) ;
+            v9 = loadedImage->GetBlue(i+2, j+2) ;
 
-	counterb = v1*mask3[0][0] + v2*mask3[1][0] + v3*mask3[2][0] + v4*mask3[0][1] + v5*mask3[1][1] + v6*mask3[2][1] + v7*mask3[0][2] + v8*mask3[1][2] + v9*mask3[2][2];
-
-
-	averagesumblue[i][j] = counterb;
+            counterb = v1*mask3[0][0] + v2*mask3[1][0] + v3*mask3[2][0] + v4*mask3[0][1] + v5*mask3[1][1] + v6*mask3[2][1] + v7*mask3[0][2] + v8*mask3[1][2] + v9*mask3[2][2];
 
 
+            averagesumblue[i][j] = counterb;
 
-	}
+
+
+        }
 
 
 	for(int i=0; i<imgWidth; i++)
 	{
 
-	 for(int j=0; j<imgHeight; j++)
-	{
+        for(int j=0; j<imgHeight; j++)
+        {
 
 
 
-	if(averagesumred[i][j]<0)
-	{
-	averagesumred[i][j] = 0;
-	}
-	if(averagesumred[i][j]>255)
-	{
-	averagesumred[i][j] = 255;
-	}
-	if(averagesumgreen[i][j]<0)
-	{
-	averagesumgreen[i][j] = 0;
-	}
-	if(averagesumgreen[i][j]>255)
-	{
-	averagesumgreen[i][j] = 255;
-	}
-	if(averagesumblue[i][j]<0)
-	{
-	averagesumblue[i][j] = 0;
-	}
-	if(averagesumblue[i][j]>255)
-	{
-	averagesumblue[i][j] = 255;
-	}
+            if(averagesumred[i][j]<0)
+            {
+                averagesumred[i][j] = 0;
+            }
+            if(averagesumred[i][j]>255)
+            {
+                averagesumred[i][j] = 255;
+            }
+            if(averagesumgreen[i][j]<0)
+            {
+                averagesumgreen[i][j] = 0;
+            }
+            if(averagesumgreen[i][j]>255)
+            {
+                averagesumgreen[i][j] = 255;
+            }
+            if(averagesumblue[i][j]<0)
+            {
+                averagesumblue[i][j] = 0;
+            }
+            if(averagesumblue[i][j]>255)
+            {
+                averagesumblue[i][j] = 255;
+            }
 
 
 
-	 loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
-	//arraycount++;
-	//cout<<averagesumred[i][j]<< "  ";
-	//cout<<arraycount << "  ";
-	}
+            loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
+            //arraycount++;
+            //cout<<averagesumred[i][j]<< "  ";
+            //cout<<arraycount << "  ";
+        }
 	}
 
-   // cout<<arraycount;
+    // cout<<arraycount;
 
     printf(" Finished roberts mask.\n");
 
@@ -1517,123 +1521,123 @@ void MyFrame::Sobelx(wxCommandEvent & event){
 	int counterr = 0;
 	int counterb = 0;
 	int counterg = 0;
-int averagesumred [imgWidth][imgHeight];
-int averagesumgreen [imgWidth][imgHeight];
-int averagesumblue [imgWidth][imgHeight];
-int mask [3][3];
+    int averagesumred [imgWidth][imgHeight];
+    int averagesumgreen [imgWidth][imgHeight];
+    int averagesumblue [imgWidth][imgHeight];
+    int mask [3][3];
 
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=0; i<imgWidth-1; i++)
-	 for(int j=0; j<imgHeight-1; j++)
-	{
-	mask[0][0] = -1;
-	mask[1][0] = 0;
-	mask[2][0] = 1;
-	mask[0][1] = -2;
-	mask[1][1] = 0;
-	mask[2][1] = 2;
-	mask[0][2] = -1;
-	mask[1][2] = 0;
-	mask[2][2] = 1;
+        for(int j=0; j<imgHeight-1; j++)
+        {
+            mask[0][0] = -1;
+            mask[1][0] = 0;
+            mask[2][0] = 1;
+            mask[0][1] = -2;
+            mask[1][1] = 0;
+            mask[2][1] = 2;
+            mask[0][2] = -1;
+            mask[1][2] = 0;
+            mask[2][2] = 1;
 
 
-	m1 = loadedImage->GetRed(0+i,0+j) ;
-	m2 = loadedImage->GetRed(1+i,j) ;
-	m3 = loadedImage->GetRed(2+i,j) ;
-	m4 = loadedImage->GetRed(0+i, 1+j) ;
-	m5 = loadedImage->GetRed(1+i, 1+j) ;
-	m6 = loadedImage->GetRed(i+2, 1+j);
-	m7 = loadedImage->GetRed(i+0, j+2) ;
-	m8 = loadedImage->GetRed(i+1, j+2) ;
-	m9 = loadedImage->GetRed(i+2, j+2) ;
+            m1 = loadedImage->GetRed(0+i,0+j) ;
+            m2 = loadedImage->GetRed(1+i,j) ;
+            m3 = loadedImage->GetRed(2+i,j) ;
+            m4 = loadedImage->GetRed(0+i, 1+j) ;
+            m5 = loadedImage->GetRed(1+i, 1+j) ;
+            m6 = loadedImage->GetRed(i+2, 1+j);
+            m7 = loadedImage->GetRed(i+0, j+2) ;
+            m8 = loadedImage->GetRed(i+1, j+2) ;
+            m9 = loadedImage->GetRed(i+2, j+2) ;
 //add m1 to m9, then divide by 16 multiply all by weighted average. that'll be average
-	counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
-	averagesumred[i][j] = abs(counterr);
-	//cout<<averagesumred[i]<< "  ";
+            counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
+            averagesumred[i][j] = abs(counterr);
+            //cout<<averagesumred[i]<< "  ";
 //green
 
 
-	n1 = loadedImage->GetGreen(i,j) ;
-	n2 = loadedImage->GetGreen(i+1,j) ;
-	n3 = loadedImage->GetGreen(i+2,j) ;
-	n4 = loadedImage->GetGreen(i, j+1) ;
-	n5 = loadedImage->GetGreen(i+1, j+1) ;
-	n6 = loadedImage->GetGreen(i+2, j+1);
-	n7 = loadedImage->GetGreen(i, j+2) ;
-	n8 = loadedImage->GetGreen(i+1, j+2) ;
-	n9 = loadedImage->GetGreen(i+2, j+2) ;
+            n1 = loadedImage->GetGreen(i,j) ;
+            n2 = loadedImage->GetGreen(i+1,j) ;
+            n3 = loadedImage->GetGreen(i+2,j) ;
+            n4 = loadedImage->GetGreen(i, j+1) ;
+            n5 = loadedImage->GetGreen(i+1, j+1) ;
+            n6 = loadedImage->GetGreen(i+2, j+1);
+            n7 = loadedImage->GetGreen(i, j+2) ;
+            n8 = loadedImage->GetGreen(i+1, j+2) ;
+            n9 = loadedImage->GetGreen(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
+            counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
 
-	averagesumgreen[i][j] = abs(counterg);
+            averagesumgreen[i][j] = abs(counterg);
 //blue
 
-	v1 = loadedImage->GetBlue(i,j) ;
-	v2 = loadedImage->GetBlue(i+1,j) ;
-	v3 = loadedImage->GetBlue(i+2,j) ;
-	v4 = loadedImage->GetBlue(i, j+1) ;
-	v5 = loadedImage->GetBlue(i+1, j+1) ;
-	v6 = loadedImage->GetBlue(i+2, j+1);
-	v7 = loadedImage->GetBlue(i, j+2) ;
-	v8 = loadedImage->GetBlue(i+1, j+2) ;
-	v9 = loadedImage->GetBlue(i+2, j+2) ;
+            v1 = loadedImage->GetBlue(i,j) ;
+            v2 = loadedImage->GetBlue(i+1,j) ;
+            v3 = loadedImage->GetBlue(i+2,j) ;
+            v4 = loadedImage->GetBlue(i, j+1) ;
+            v5 = loadedImage->GetBlue(i+1, j+1) ;
+            v6 = loadedImage->GetBlue(i+2, j+1);
+            v7 = loadedImage->GetBlue(i, j+2) ;
+            v8 = loadedImage->GetBlue(i+1, j+2) ;
+            v9 = loadedImage->GetBlue(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
+            counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
 
 //	arraycount+=1;
-	averagesumblue[i][j] = abs(counterb);
+            averagesumblue[i][j] = abs(counterb);
 //	cout << averagesumblue[i] << " ";
 //	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
 
-	}
+        }
 
 
 	for(int i=0; i<imgWidth; i++)
 	{
 
-	 for(int j=0; j<imgHeight; j++)
-	{
-	if(averagesumred[i][j]<0)
-	{
-	averagesumred[i][j] = 0;
-	}
-	if(averagesumred[i][j]>255)
-	{
-	averagesumred[i][j] = 255;
-	}
-	if(averagesumgreen[i][j]<0)
-	{
-	averagesumgreen[i][j] = 0;
-	}
-	if(averagesumgreen[i][j]>255)
-	{
-	averagesumgreen[i][j] = 255;
-	}
-	if(averagesumblue[i][j]<0)
-	{
-	averagesumblue[i][j] = 0;
-	}
-	if(averagesumblue[i][j]>255)
-	{
-	averagesumblue[i][j] = 255;
-	}
+        for(int j=0; j<imgHeight; j++)
+        {
+            if(averagesumred[i][j]<0)
+            {
+                averagesumred[i][j] = 0;
+            }
+            if(averagesumred[i][j]>255)
+            {
+                averagesumred[i][j] = 255;
+            }
+            if(averagesumgreen[i][j]<0)
+            {
+                averagesumgreen[i][j] = 0;
+            }
+            if(averagesumgreen[i][j]>255)
+            {
+                averagesumgreen[i][j] = 255;
+            }
+            if(averagesumblue[i][j]<0)
+            {
+                averagesumblue[i][j] = 0;
+            }
+            if(averagesumblue[i][j]>255)
+            {
+                averagesumblue[i][j] = 255;
+            }
 
 
 
-	 loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
-	//arraycount++;
-	//cout<<averagesumred[i][j]<< "  ";
-	//cout<<arraycount << "  ";
-	}
+            loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
+            //arraycount++;
+            //cout<<averagesumred[i][j]<< "  ";
+            //cout<<arraycount << "  ";
+        }
 	}
 
-   // cout<<arraycount;
+    // cout<<arraycount;
 
     printf(" Finished sobel x.\n");
 
     Refresh();
-    }
+}
 
 //lab5 exercise 2 sobel y
 void MyFrame::Sobely(wxCommandEvent & event){
@@ -1659,120 +1663,120 @@ void MyFrame::Sobely(wxCommandEvent & event){
 //	int* averagesumred = new int[imgWidth][imgHeight];
 //	int* averagesumgreen = new int[imgWidth][imgHeight];
 //	int* averagesumblue = new int[imgWidth][imgHeight];
-int averagesumred [imgWidth][imgHeight];
-int averagesumgreen [imgWidth][imgHeight];
-int averagesumblue [imgWidth][imgHeight];
-int mask [3][3];
+    int averagesumred [imgWidth][imgHeight];
+    int averagesumgreen [imgWidth][imgHeight];
+    int averagesumblue [imgWidth][imgHeight];
+    int mask [3][3];
 
 	int arraycount= 0;
 //	int fgt[3] [3]=new int
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=0; i<imgWidth-1; i++)
-	 for(int j=0; j<imgHeight-1; j++)
-	{
-	mask[0][0] = -1;
-	mask[1][0] = -2;
-	mask[2][0] = -1;
-	mask[0][1] = 0;
-	mask[1][1] = 0;
-	mask[2][1] = 0;
-	mask[0][2] = 1;
-	mask[1][2] = 2;
-	mask[2][2] = 1;
+        for(int j=0; j<imgHeight-1; j++)
+        {
+            mask[0][0] = -1;
+            mask[1][0] = -2;
+            mask[2][0] = -1;
+            mask[0][1] = 0;
+            mask[1][1] = 0;
+            mask[2][1] = 0;
+            mask[0][2] = 1;
+            mask[1][2] = 2;
+            mask[2][2] = 1;
 
 
-	m1 = loadedImage->GetRed(0+i,0+j) ;
-	m2 = loadedImage->GetRed(1+i,j) ;
-	m3 = loadedImage->GetRed(2+i,j) ;
-	m4 = loadedImage->GetRed(0+i, 1+j) ;
-	m5 = loadedImage->GetRed(1+i, 1+j) ;
-	m6 = loadedImage->GetRed(i+2, 1+j);
-	m7 = loadedImage->GetRed(i+0, j+2) ;
-	m8 = loadedImage->GetRed(i+1, j+2) ;
-	m9 = loadedImage->GetRed(i+2, j+2) ;
+            m1 = loadedImage->GetRed(0+i,0+j) ;
+            m2 = loadedImage->GetRed(1+i,j) ;
+            m3 = loadedImage->GetRed(2+i,j) ;
+            m4 = loadedImage->GetRed(0+i, 1+j) ;
+            m5 = loadedImage->GetRed(1+i, 1+j) ;
+            m6 = loadedImage->GetRed(i+2, 1+j);
+            m7 = loadedImage->GetRed(i+0, j+2) ;
+            m8 = loadedImage->GetRed(i+1, j+2) ;
+            m9 = loadedImage->GetRed(i+2, j+2) ;
 //add m1 to m9, then divide by 16 multiply all by weighted average. that'll be average
-	counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
-	averagesumred[i][j] = counterr;
-	//cout<<averagesumred[i]<< "  ";
+            counterr = m1*mask[0][0] + m2*mask[1][0] + m3*mask[2][0] + m4*mask[0][1] + m5*mask[1][1] + m6*mask[2][1] + m7*mask[0][2] + m8*mask[1][2] + m9*mask[2][2];
+            averagesumred[i][j] = counterr;
+            //cout<<averagesumred[i]<< "  ";
 //green
 
 
-	n1 = loadedImage->GetGreen(i,j) ;
-	n2 = loadedImage->GetGreen(i+1,j) ;
-	n3 = loadedImage->GetGreen(i+2,j) ;
-	n4 = loadedImage->GetGreen(i, j+1) ;
-	n5 = loadedImage->GetGreen(i+1, j+1) ;
-	n6 = loadedImage->GetGreen(i+2, j+1);
-	n7 = loadedImage->GetGreen(i, j+2) ;
-	n8 = loadedImage->GetGreen(i+1, j+2) ;
-	n9 = loadedImage->GetGreen(i+2, j+2) ;
+            n1 = loadedImage->GetGreen(i,j) ;
+            n2 = loadedImage->GetGreen(i+1,j) ;
+            n3 = loadedImage->GetGreen(i+2,j) ;
+            n4 = loadedImage->GetGreen(i, j+1) ;
+            n5 = loadedImage->GetGreen(i+1, j+1) ;
+            n6 = loadedImage->GetGreen(i+2, j+1);
+            n7 = loadedImage->GetGreen(i, j+2) ;
+            n8 = loadedImage->GetGreen(i+1, j+2) ;
+            n9 = loadedImage->GetGreen(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
+            counterg = n1*mask[0][0] + n2*mask[1][0] + n3*mask[2][0] + n4*mask[0][1] + n5*mask[1][1] + n6*mask[2][1] + n7*mask[0][2] + n8*mask[1][2] + n9*mask[2][2];
 
-	averagesumgreen[i][j] = counterg;
+            averagesumgreen[i][j] = counterg;
 //blue
 
-	v1 = loadedImage->GetBlue(i,j) ;
-	v2 = loadedImage->GetBlue(i+1,j) ;
-	v3 = loadedImage->GetBlue(i+2,j) ;
-	v4 = loadedImage->GetBlue(i, j+1) ;
-	v5 = loadedImage->GetBlue(i+1, j+1) ;
-	v6 = loadedImage->GetBlue(i+2, j+1);
-	v7 = loadedImage->GetBlue(i, j+2) ;
-	v8 = loadedImage->GetBlue(i+1, j+2) ;
-	v9 = loadedImage->GetBlue(i+2, j+2) ;
+            v1 = loadedImage->GetBlue(i,j) ;
+            v2 = loadedImage->GetBlue(i+1,j) ;
+            v3 = loadedImage->GetBlue(i+2,j) ;
+            v4 = loadedImage->GetBlue(i, j+1) ;
+            v5 = loadedImage->GetBlue(i+1, j+1) ;
+            v6 = loadedImage->GetBlue(i+2, j+1);
+            v7 = loadedImage->GetBlue(i, j+2) ;
+            v8 = loadedImage->GetBlue(i+1, j+2) ;
+            v9 = loadedImage->GetBlue(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
-	counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
+            counterb = v1*mask[0][0] + v2*mask[1][0] + v3*mask[2][0] + v4*mask[0][1] + v5*mask[1][1] + v6*mask[2][1] + v7*mask[0][2] + v8*mask[1][2] + v9*mask[2][2];
 
 //	arraycount+=1;
-	averagesumblue[i][j] = counterb;
+            averagesumblue[i][j] = counterb;
 //	cout << averagesumblue[i] << " ";
 //	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
 
-	}
+        }
 
 
 	for(int i=0; i<imgWidth; i++)
 	{
 
-	 for(int j=0; j<imgHeight; j++)
-	{
-	if(averagesumred[i][j]<0)
-	{
-	averagesumred[i][j] = 0;
-	}
-	if(averagesumred[i][j]>255)
-	{
-	averagesumred[i][j] = 255;
-	}
-	if(averagesumgreen[i][j]<0)
-	{
-	averagesumgreen[i][j] = 0;
-	}
-	if(averagesumgreen[i][j]>255)
-	{
-	averagesumgreen[i][j] = 255;
-	}
-	if(averagesumblue[i][j]<0)
-	{
-	averagesumblue[i][j] = 0;
-	}
-	if(averagesumblue[i][j]>255)
-	{
-	averagesumblue[i][j] = 255;
-	}
+        for(int j=0; j<imgHeight; j++)
+        {
+            if(averagesumred[i][j]<0)
+            {
+                averagesumred[i][j] = 0;
+            }
+            if(averagesumred[i][j]>255)
+            {
+                averagesumred[i][j] = 255;
+            }
+            if(averagesumgreen[i][j]<0)
+            {
+                averagesumgreen[i][j] = 0;
+            }
+            if(averagesumgreen[i][j]>255)
+            {
+                averagesumgreen[i][j] = 255;
+            }
+            if(averagesumblue[i][j]<0)
+            {
+                averagesumblue[i][j] = 0;
+            }
+            if(averagesumblue[i][j]>255)
+            {
+                averagesumblue[i][j] = 255;
+            }
 
 
 
-	 loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
-	//arraycount++;
-	//cout<<averagesumred[i][j]<< "  ";
-	//cout<<arraycount << "  ";
-	}
+            loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
+            //arraycount++;
+            //cout<<averagesumred[i][j]<< "  ";
+            //cout<<arraycount << "  ";
+        }
 	}
 
-   // cout<<arraycount;
+    // cout<<arraycount;
 
     printf(" Finished sobel y.\n");
 
@@ -1809,33 +1813,33 @@ void MyFrame::SaltandPepperFiltering(wxCommandEvent & event){
 
 	for (int i=0; i<saltandpepper;i++)
 	{
-	int x = (rand () % imgHeight);
-	int y = (rand () % imgWidth);
-	int z = (rand () % 5);
+        int x = (rand () % imgHeight);
+        int y = (rand () % imgWidth);
+        int z = (rand () % 5);
 
-	r = loadedImage->GetRed(x,y);   // red pixel value
+        r = loadedImage->GetRed(x,y);   // red pixel value
         g = loadedImage->GetGreen(x,y); // green pixel value
-	b = loadedImage->GetBlue(x,y); // blue pixel value
+        b = loadedImage->GetBlue(x,y); // blue pixel value
 
-	if(z == 1)
-	{
-	r = 255; g=255; b=255;
-	}
-	else if(z == 3)
-	{
-	r = 0; g = 0; b = 0;
-	}
-
-
+        if(z == 1)
+        {
+            r = 255; g=255; b=255;
+        }
+        else if(z == 3)
+        {
+            r = 0; g = 0; b = 0;
+        }
 
 
-	//printf("(%d,%d) [r = %x  | g = %x | b = %x] \n",i,j,r,g,b);
 
-	// SAVE THE RGB VALUES
-	loadedImage->SetRGB(x,y,r,g,b);
+
+        //printf("(%d,%d) [r = %x  | g = %x | b = %x] \n",i,j,r,g,b);
+
+        // SAVE THE RGB VALUES
+        loadedImage->SetRGB(x,y,r,g,b);
     }
 
-  //printf ("Random number= %g", nathansrand);
+    //printf ("Random number= %g", nathansrand);
     printf(" Finished salt and pepper.\n");
 
     Refresh();
@@ -1868,145 +1872,145 @@ void MyFrame::MinFiltering(wxCommandEvent & event){
 //	int* averagesumred = new int[imgWidth][imgHeight];
 //	int* averagesumgreen = new int[imgWidth][imgHeight];
 //	int* averagesumblue = new int[imgWidth][imgHeight];
-int averagesumred [imgWidth][imgHeight];
-int averagesumgreen [imgWidth][imgHeight];
-int averagesumblue [imgWidth][imgHeight];
-int mask [3][3];
+    int averagesumred [imgWidth][imgHeight];
+    int averagesumgreen [imgWidth][imgHeight];
+    int averagesumblue [imgWidth][imgHeight];
+    int mask [3][3];
 
 
 
 	//int arraycount= 0;
 //	int fgt[3] [3]=new int
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=0; i<imgWidth-1; i++)
-	 for(int j=0; j<imgHeight-1; j++)
-	{
+        for(int j=0; j<imgHeight-1; j++)
+        {
 
-	int tempred = 0;
-	int tempgreen = 0;
-	int tempblue = 0;
+            int tempred = 0;
+            int tempgreen = 0;
+            int tempblue = 0;
 
-	m1 = loadedImage->GetRed(0+i,0+j) ;
-	m2 = loadedImage->GetRed(1+i,j) ;
-	m3 = loadedImage->GetRed(2+i,j) ;
-	m4 = loadedImage->GetRed(0+i, 1+j) ;
-	m5 = loadedImage->GetRed(1+i, 1+j) ;
-	m6 = loadedImage->GetRed(i+2, 1+j);
-	m7 = loadedImage->GetRed(i+0, j+2) ;
-	m8 = loadedImage->GetRed(i+1, j+2) ;
-	m9 = loadedImage->GetRed(i+2, j+2) ;
+            m1 = loadedImage->GetRed(0+i,0+j) ;
+            m2 = loadedImage->GetRed(1+i,j) ;
+            m3 = loadedImage->GetRed(2+i,j) ;
+            m4 = loadedImage->GetRed(0+i, 1+j) ;
+            m5 = loadedImage->GetRed(1+i, 1+j) ;
+            m6 = loadedImage->GetRed(i+2, 1+j);
+            m7 = loadedImage->GetRed(i+0, j+2) ;
+            m8 = loadedImage->GetRed(i+1, j+2) ;
+            m9 = loadedImage->GetRed(i+2, j+2) ;
 
-	int redarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
+            int redarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
 
-	for(int z = 0; z<9; z++)
-	{
-		if (redarray[z]>tempred)
-		tempred=redarray[z];
-	}
+            for(int z = 0; z<9; z++)
+            {
+                if (redarray[z]>tempred)
+                    tempred=redarray[z];
+            }
 
 
 
 //add m1 to m9, then divide by 16 multiply all by weighted average. that'll be average
 
-	averagesumred[i][j] = tempred;
-	//cout<<averagesumred[i]<< "  ";
+            averagesumred[i][j] = tempred;
+            //cout<<averagesumred[i]<< "  ";
 //green
 
 
-	n1 = loadedImage->GetGreen(i,j) ;
-	n2 = loadedImage->GetGreen(i+1,j) ;
-	n3 = loadedImage->GetGreen(i+2,j) ;
-	n4 = loadedImage->GetGreen(i, j+1) ;
-	n5 = loadedImage->GetGreen(i+1, j+1) ;
-	n6 = loadedImage->GetGreen(i+2, j+1);
-	n7 = loadedImage->GetGreen(i, j+2) ;
-	n8 = loadedImage->GetGreen(i+1, j+2) ;
-	n9 = loadedImage->GetGreen(i+2, j+2) ;
+            n1 = loadedImage->GetGreen(i,j) ;
+            n2 = loadedImage->GetGreen(i+1,j) ;
+            n3 = loadedImage->GetGreen(i+2,j) ;
+            n4 = loadedImage->GetGreen(i, j+1) ;
+            n5 = loadedImage->GetGreen(i+1, j+1) ;
+            n6 = loadedImage->GetGreen(i+2, j+1);
+            n7 = loadedImage->GetGreen(i, j+2) ;
+            n8 = loadedImage->GetGreen(i+1, j+2) ;
+            n9 = loadedImage->GetGreen(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
 
-int greenarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
+            int greenarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
 
-	for(int z = 0; z<9; z++)
-	{
-		if (greenarray[z]>tempgreen)
-		tempgreen=greenarray[z];
-	}
+            for(int z = 0; z<9; z++)
+            {
+                if (greenarray[z]>tempgreen)
+                    tempgreen=greenarray[z];
+            }
 
 
 
-	averagesumgreen[i][j] = tempgreen;
+            averagesumgreen[i][j] = tempgreen;
 //blue
 
-	v1 = loadedImage->GetBlue(i,j) ;
-	v2 = loadedImage->GetBlue(i+1,j) ;
-	v3 = loadedImage->GetBlue(i+2,j) ;
-	v4 = loadedImage->GetBlue(i, j+1) ;
-	v5 = loadedImage->GetBlue(i+1, j+1) ;
-	v6 = loadedImage->GetBlue(i+2, j+1);
-	v7 = loadedImage->GetBlue(i, j+2) ;
-	v8 = loadedImage->GetBlue(i+1, j+2) ;
-	v9 = loadedImage->GetBlue(i+2, j+2) ;
+            v1 = loadedImage->GetBlue(i,j) ;
+            v2 = loadedImage->GetBlue(i+1,j) ;
+            v3 = loadedImage->GetBlue(i+2,j) ;
+            v4 = loadedImage->GetBlue(i, j+1) ;
+            v5 = loadedImage->GetBlue(i+1, j+1) ;
+            v6 = loadedImage->GetBlue(i+2, j+1);
+            v7 = loadedImage->GetBlue(i, j+2) ;
+            v8 = loadedImage->GetBlue(i+1, j+2) ;
+            v9 = loadedImage->GetBlue(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
 
-	int bluearray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
+            int bluearray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
 
-	for(int z = 0; z<9; z++)
-	{
-		if (bluearray[z]>tempblue)
-		tempblue=bluearray[z];
-	}
+            for(int z = 0; z<9; z++)
+            {
+                if (bluearray[z]>tempblue)
+                    tempblue=bluearray[z];
+            }
 
 
 
-	averagesumblue[i][j] = tempblue;
+            averagesumblue[i][j] = tempblue;
 
 //	cout << averagesumblue[i] << " ";
 //	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
 
-	}
+        }
 
 
 	for(int i=0; i<imgWidth; i++)
 	{
 
-	 for(int j=0; j<imgHeight; j++)
-	{
-	if(averagesumred[i][j]<0)
-	{
-	averagesumred[i][j] = 0;
-	}
-	if(averagesumred[i][j]>255)
-	{
-	averagesumred[i][j] = 255;
-	}
-	if(averagesumgreen[i][j]<0)
-	{
-	averagesumgreen[i][j] = 0;
-	}
-	if(averagesumgreen[i][j]>255)
-	{
-	averagesumgreen[i][j] = 255;
-	}
-	if(averagesumblue[i][j]<0)
-	{
-	averagesumblue[i][j] = 0;
-	}
-	if(averagesumblue[i][j]>255)
-	{
-	averagesumblue[i][j] = 255;
-	}
+        for(int j=0; j<imgHeight; j++)
+        {
+            if(averagesumred[i][j]<0)
+            {
+                averagesumred[i][j] = 0;
+            }
+            if(averagesumred[i][j]>255)
+            {
+                averagesumred[i][j] = 255;
+            }
+            if(averagesumgreen[i][j]<0)
+            {
+                averagesumgreen[i][j] = 0;
+            }
+            if(averagesumgreen[i][j]>255)
+            {
+                averagesumgreen[i][j] = 255;
+            }
+            if(averagesumblue[i][j]<0)
+            {
+                averagesumblue[i][j] = 0;
+            }
+            if(averagesumblue[i][j]>255)
+            {
+                averagesumblue[i][j] = 255;
+            }
 
 
 
-	 loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
-	//arraycount++;
-	//cout<<averagesumred[i][j]<< "  ";
-	//cout<<arraycount << "  ";
-	}
+            loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
+            //arraycount++;
+            //cout<<averagesumred[i][j]<< "  ";
+            //cout<<arraycount << "  ";
+        }
 	}
 
-   // cout<<arraycount;
+    // cout<<arraycount;
 
     printf(" Finished min filtering.\n");
 
@@ -2018,7 +2022,7 @@ int greenarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
 
 //lab6 exercise 3 maxfiltering
 void MyFrame::MaxFiltering(wxCommandEvent & event){
- printf("Max Filtering...");
+    printf("Max Filtering...");
     free(loadedImage);
     loadedImage = new wxImage(bitmap.ConvertToImage());
 	int r,g,b;
@@ -2037,145 +2041,145 @@ void MyFrame::MaxFiltering(wxCommandEvent & event){
 //	int* averagesumred = new int[imgWidth][imgHeight];
 //	int* averagesumgreen = new int[imgWidth][imgHeight];
 //	int* averagesumblue = new int[imgWidth][imgHeight];
-int averagesumred [imgWidth][imgHeight];
-int averagesumgreen [imgWidth][imgHeight];
-int averagesumblue [imgWidth][imgHeight];
-int mask [3][3];
+    int averagesumred [imgWidth][imgHeight];
+    int averagesumgreen [imgWidth][imgHeight];
+    int averagesumblue [imgWidth][imgHeight];
+    int mask [3][3];
 
 
 
 	//int arraycount= 0;
 //	int fgt[3] [3]=new int
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=0; i<imgWidth-1; i++)
-	 for(int j=0; j<imgHeight-1; j++)
-	{
+        for(int j=0; j<imgHeight-1; j++)
+        {
 
-	int tempred = 255;
-	int tempgreen = 255;
-	int tempblue = 255;
+            int tempred = 255;
+            int tempgreen = 255;
+            int tempblue = 255;
 
-	m1 = loadedImage->GetRed(0+i,0+j) ;
-	m2 = loadedImage->GetRed(1+i,j) ;
-	m3 = loadedImage->GetRed(2+i,j) ;
-	m4 = loadedImage->GetRed(0+i, 1+j) ;
-	m5 = loadedImage->GetRed(1+i, 1+j) ;
-	m6 = loadedImage->GetRed(i+2, 1+j);
-	m7 = loadedImage->GetRed(i+0, j+2) ;
-	m8 = loadedImage->GetRed(i+1, j+2) ;
-	m9 = loadedImage->GetRed(i+2, j+2) ;
+            m1 = loadedImage->GetRed(0+i,0+j) ;
+            m2 = loadedImage->GetRed(1+i,j) ;
+            m3 = loadedImage->GetRed(2+i,j) ;
+            m4 = loadedImage->GetRed(0+i, 1+j) ;
+            m5 = loadedImage->GetRed(1+i, 1+j) ;
+            m6 = loadedImage->GetRed(i+2, 1+j);
+            m7 = loadedImage->GetRed(i+0, j+2) ;
+            m8 = loadedImage->GetRed(i+1, j+2) ;
+            m9 = loadedImage->GetRed(i+2, j+2) ;
 
-	int redarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
+            int redarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
 
-	for(int z = 0; z<9; z++)
-	{
-		if (redarray[z]<tempred)
-		tempred=redarray[z];
-	}
+            for(int z = 0; z<9; z++)
+            {
+                if (redarray[z]<tempred)
+                    tempred=redarray[z];
+            }
 
 
 
 //add m1 to m9, then divide by 16 multiply all by weighted average. that'll be average
 
-	averagesumred[i][j] = tempred;
-	//cout<<averagesumred[i]<< "  ";
+            averagesumred[i][j] = tempred;
+            //cout<<averagesumred[i]<< "  ";
 //green
 
 
-	n1 = loadedImage->GetGreen(i,j) ;
-	n2 = loadedImage->GetGreen(i+1,j) ;
-	n3 = loadedImage->GetGreen(i+2,j) ;
-	n4 = loadedImage->GetGreen(i, j+1) ;
-	n5 = loadedImage->GetGreen(i+1, j+1) ;
-	n6 = loadedImage->GetGreen(i+2, j+1);
-	n7 = loadedImage->GetGreen(i, j+2) ;
-	n8 = loadedImage->GetGreen(i+1, j+2) ;
-	n9 = loadedImage->GetGreen(i+2, j+2) ;
+            n1 = loadedImage->GetGreen(i,j) ;
+            n2 = loadedImage->GetGreen(i+1,j) ;
+            n3 = loadedImage->GetGreen(i+2,j) ;
+            n4 = loadedImage->GetGreen(i, j+1) ;
+            n5 = loadedImage->GetGreen(i+1, j+1) ;
+            n6 = loadedImage->GetGreen(i+2, j+1);
+            n7 = loadedImage->GetGreen(i, j+2) ;
+            n8 = loadedImage->GetGreen(i+1, j+2) ;
+            n9 = loadedImage->GetGreen(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
 
-int greenarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
+            int greenarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
 
-	for(int z = 0; z<9; z++)
-	{
-		if (greenarray[z]<tempgreen)
-		tempgreen=greenarray[z];
-	}
+            for(int z = 0; z<9; z++)
+            {
+                if (greenarray[z]<tempgreen)
+                    tempgreen=greenarray[z];
+            }
 
 
 
-	averagesumgreen[i][j] = tempgreen;
+            averagesumgreen[i][j] = tempgreen;
 //blue
 
-	v1 = loadedImage->GetBlue(i,j) ;
-	v2 = loadedImage->GetBlue(i+1,j) ;
-	v3 = loadedImage->GetBlue(i+2,j) ;
-	v4 = loadedImage->GetBlue(i, j+1) ;
-	v5 = loadedImage->GetBlue(i+1, j+1) ;
-	v6 = loadedImage->GetBlue(i+2, j+1);
-	v7 = loadedImage->GetBlue(i, j+2) ;
-	v8 = loadedImage->GetBlue(i+1, j+2) ;
-	v9 = loadedImage->GetBlue(i+2, j+2) ;
+            v1 = loadedImage->GetBlue(i,j) ;
+            v2 = loadedImage->GetBlue(i+1,j) ;
+            v3 = loadedImage->GetBlue(i+2,j) ;
+            v4 = loadedImage->GetBlue(i, j+1) ;
+            v5 = loadedImage->GetBlue(i+1, j+1) ;
+            v6 = loadedImage->GetBlue(i+2, j+1);
+            v7 = loadedImage->GetBlue(i, j+2) ;
+            v8 = loadedImage->GetBlue(i+1, j+2) ;
+            v9 = loadedImage->GetBlue(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
 
-	int bluearray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
+            int bluearray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
 
-	for(int z = 0; z<9; z++)
-	{
-		if (bluearray[z]<tempblue)
-		tempblue=bluearray[z];
-	}
+            for(int z = 0; z<9; z++)
+            {
+                if (bluearray[z]<tempblue)
+                    tempblue=bluearray[z];
+            }
 
 
 
-	averagesumblue[i][j] = tempblue;
+            averagesumblue[i][j] = tempblue;
 
 //	cout << averagesumblue[i] << " ";
 //	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
 
-	}
+        }
 
 
 	for(int i=0; i<imgWidth; i++)
 	{
 
-	 for(int j=0; j<imgHeight; j++)
-	{
-	if(averagesumred[i][j]<0)
-	{
-	averagesumred[i][j] = 0;
-	}
-	if(averagesumred[i][j]>255)
-	{
-	averagesumred[i][j] = 255;
-	}
-	if(averagesumgreen[i][j]<0)
-	{
-	averagesumgreen[i][j] = 0;
-	}
-	if(averagesumgreen[i][j]>255)
-	{
-	averagesumgreen[i][j] = 255;
-	}
-	if(averagesumblue[i][j]<0)
-	{
-	averagesumblue[i][j] = 0;
-	}
-	if(averagesumblue[i][j]>255)
-	{
-	averagesumblue[i][j] = 255;
-	}
+        for(int j=0; j<imgHeight; j++)
+        {
+            if(averagesumred[i][j]<0)
+            {
+                averagesumred[i][j] = 0;
+            }
+            if(averagesumred[i][j]>255)
+            {
+                averagesumred[i][j] = 255;
+            }
+            if(averagesumgreen[i][j]<0)
+            {
+                averagesumgreen[i][j] = 0;
+            }
+            if(averagesumgreen[i][j]>255)
+            {
+                averagesumgreen[i][j] = 255;
+            }
+            if(averagesumblue[i][j]<0)
+            {
+                averagesumblue[i][j] = 0;
+            }
+            if(averagesumblue[i][j]>255)
+            {
+                averagesumblue[i][j] = 255;
+            }
 
 
 
-	 loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
-	//arraycount++;
+            loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
+            //arraycount++;
 //	cout<<averagesumred[i][j]<< "  ";
-	//cout<<arraycount << "  ";
-	}
+            //cout<<arraycount << "  ";
+        }
 	}
 
-   // cout<<arraycount;
+    // cout<<arraycount;
 
     printf(" Finished max filtering.\n");
 
@@ -2188,7 +2192,7 @@ int greenarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
 
 //lab6 exercise 4 midpoint filtering
 void MyFrame::MidFiltering(wxCommandEvent & event){
- printf("Midpoint Filtering...");
+    printf("Midpoint Filtering...");
     free(loadedImage);
     loadedImage = new wxImage(bitmap.ConvertToImage());
 	int r,g,b;
@@ -2207,166 +2211,166 @@ void MyFrame::MidFiltering(wxCommandEvent & event){
 //	int* averagesumred = new int[imgWidth][imgHeight];
 //	int* averagesumgreen = new int[imgWidth][imgHeight];
 //	int* averagesumblue = new int[imgWidth][imgHeight];
-int averagesumred [imgWidth][imgHeight];
-int averagesumgreen [imgWidth][imgHeight];
-int averagesumblue [imgWidth][imgHeight];
-int mask [3][3];
+    int averagesumred [imgWidth][imgHeight];
+    int averagesumgreen [imgWidth][imgHeight];
+    int averagesumblue [imgWidth][imgHeight];
+    int mask [3][3];
 
 
 
 	//int arraycount= 0;
 //	int fgt[3] [3]=new int
 
- //mask multiplying by values on the image
+    //mask multiplying by values on the image
 	for(int i=0; i<imgWidth-1; i++)
-	 for(int j=0; j<imgHeight-1; j++)
-	{
+        for(int j=0; j<imgHeight-1; j++)
+        {
 
-	int lowred = 0;
-	int lowgreen = 0;
-	int lowblue = 0;
-	int highred = 255;
-	int highgreen = 255;
-	int highblue = 255;
+            int lowred = 0;
+            int lowgreen = 0;
+            int lowblue = 0;
+            int highred = 255;
+            int highgreen = 255;
+            int highblue = 255;
 
-	m1 = loadedImage->GetRed(0+i,0+j) ;
-	m2 = loadedImage->GetRed(1+i,j) ;
-	m3 = loadedImage->GetRed(2+i,j) ;
-	m4 = loadedImage->GetRed(0+i, 1+j) ;
-	m5 = loadedImage->GetRed(1+i, 1+j) ;
-	m6 = loadedImage->GetRed(i+2, 1+j);
-	m7 = loadedImage->GetRed(i+0, j+2) ;
-	m8 = loadedImage->GetRed(i+1, j+2) ;
-	m9 = loadedImage->GetRed(i+2, j+2) ;
+            m1 = loadedImage->GetRed(0+i,0+j) ;
+            m2 = loadedImage->GetRed(1+i,j) ;
+            m3 = loadedImage->GetRed(2+i,j) ;
+            m4 = loadedImage->GetRed(0+i, 1+j) ;
+            m5 = loadedImage->GetRed(1+i, 1+j) ;
+            m6 = loadedImage->GetRed(i+2, 1+j);
+            m7 = loadedImage->GetRed(i+0, j+2) ;
+            m8 = loadedImage->GetRed(i+1, j+2) ;
+            m9 = loadedImage->GetRed(i+2, j+2) ;
 
-	int redarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
+            int redarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
 
-	for(int z = 0; z<9; z++)
-	{
-		if (redarray[z]>lowred)
-		lowred=redarray[z];
-	}
+            for(int z = 0; z<9; z++)
+            {
+                if (redarray[z]>lowred)
+                    lowred=redarray[z];
+            }
 
-	for(int z = 0; z<9; z++)
-	{
-		if (redarray[z]<highred)
-		highred=redarray[z];
-	}
+            for(int z = 0; z<9; z++)
+            {
+                if (redarray[z]<highred)
+                    highred=redarray[z];
+            }
 
 
 
 //add m1 to m9, then divide by 16 multiply all by weighted average. that'll be average
 
-	averagesumred[i][j] = (highred + lowred)/2;
-	//cout<<averagesumred[i]<< "  ";
+            averagesumred[i][j] = (highred + lowred)/2;
+            //cout<<averagesumred[i]<< "  ";
 //green
 
 
-	n1 = loadedImage->GetGreen(i,j) ;
-	n2 = loadedImage->GetGreen(i+1,j) ;
-	n3 = loadedImage->GetGreen(i+2,j) ;
-	n4 = loadedImage->GetGreen(i, j+1) ;
-	n5 = loadedImage->GetGreen(i+1, j+1) ;
-	n6 = loadedImage->GetGreen(i+2, j+1);
-	n7 = loadedImage->GetGreen(i, j+2) ;
-	n8 = loadedImage->GetGreen(i+1, j+2) ;
-	n9 = loadedImage->GetGreen(i+2, j+2) ;
+            n1 = loadedImage->GetGreen(i,j) ;
+            n2 = loadedImage->GetGreen(i+1,j) ;
+            n3 = loadedImage->GetGreen(i+2,j) ;
+            n4 = loadedImage->GetGreen(i, j+1) ;
+            n5 = loadedImage->GetGreen(i+1, j+1) ;
+            n6 = loadedImage->GetGreen(i+2, j+1);
+            n7 = loadedImage->GetGreen(i, j+2) ;
+            n8 = loadedImage->GetGreen(i+1, j+2) ;
+            n9 = loadedImage->GetGreen(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
 
-int greenarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
+            int greenarray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
 
-	for(int z = 0; z<9; z++)
-	{
-		if (greenarray[z]>lowgreen)
-		lowgreen=greenarray[z];
-	}
+            for(int z = 0; z<9; z++)
+            {
+                if (greenarray[z]>lowgreen)
+                    lowgreen=greenarray[z];
+            }
 
-	for(int z = 0; z<9; z++)
-	{
-		if (greenarray[z]<highgreen)
-		highgreen=greenarray[z];
-	}
+            for(int z = 0; z<9; z++)
+            {
+                if (greenarray[z]<highgreen)
+                    highgreen=greenarray[z];
+            }
 
 
 
-	averagesumgreen[i][j] = (highgreen+lowgreen)/2;
+            averagesumgreen[i][j] = (highgreen+lowgreen)/2;
 //blue
 
-	v1 = loadedImage->GetBlue(i,j) ;
-	v2 = loadedImage->GetBlue(i+1,j) ;
-	v3 = loadedImage->GetBlue(i+2,j) ;
-	v4 = loadedImage->GetBlue(i, j+1) ;
-	v5 = loadedImage->GetBlue(i+1, j+1) ;
-	v6 = loadedImage->GetBlue(i+2, j+1);
-	v7 = loadedImage->GetBlue(i, j+2) ;
-	v8 = loadedImage->GetBlue(i+1, j+2) ;
-	v9 = loadedImage->GetBlue(i+2, j+2) ;
+            v1 = loadedImage->GetBlue(i,j) ;
+            v2 = loadedImage->GetBlue(i+1,j) ;
+            v3 = loadedImage->GetBlue(i+2,j) ;
+            v4 = loadedImage->GetBlue(i, j+1) ;
+            v5 = loadedImage->GetBlue(i+1, j+1) ;
+            v6 = loadedImage->GetBlue(i+2, j+1);
+            v7 = loadedImage->GetBlue(i, j+2) ;
+            v8 = loadedImage->GetBlue(i+1, j+2) ;
+            v9 = loadedImage->GetBlue(i+2, j+2) ;
 //add m1 to m9, then divide by 9. that'll be average
 
-	int bluearray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
+            int bluearray[9] = {m1,m2,m3,m4,m5,m6,m7,m8,m9};
 
-	for(int z = 0; z<9; z++)
-	{
-		if (bluearray[z]>lowblue)
-		lowblue=bluearray[z];
-	}
+            for(int z = 0; z<9; z++)
+            {
+                if (bluearray[z]>lowblue)
+                    lowblue=bluearray[z];
+            }
 
-	for(int z = 0; z<9; z++)
-	{
-		if (bluearray[z]<highblue)
-		highblue=bluearray[z];
-	}
-
-
+            for(int z = 0; z<9; z++)
+            {
+                if (bluearray[z]<highblue)
+                    highblue=bluearray[z];
+            }
 
 
-	averagesumblue[i][j] = (highblue + lowblue)/2;
+
+
+            averagesumblue[i][j] = (highblue + lowblue)/2;
 
 //	cout << averagesumblue[i] << " ";
 //	 loadedImage->SetRGB(i,j,averagesumred[i],averagesumgreen[i],averagesumblue[i]);
 
-	}
+        }
 
 
 	for(int i=0; i<imgWidth; i++)
 	{
 
-	 for(int j=0; j<imgHeight; j++)
-	{
-	if(averagesumred[i][j]<0)
-	{
-	averagesumred[i][j] = 0;
-	}
-	if(averagesumred[i][j]>255)
-	{
-	averagesumred[i][j] = 255;
-	}
-	if(averagesumgreen[i][j]<0)
-	{
-	averagesumgreen[i][j] = 0;
-	}
-	if(averagesumgreen[i][j]>255)
-	{
-	averagesumgreen[i][j] = 255;
-	}
-	if(averagesumblue[i][j]<0)
-	{
-	averagesumblue[i][j] = 0;
-	}
-	if(averagesumblue[i][j]>255)
-	{
-	averagesumblue[i][j] = 255;
-	}
+        for(int j=0; j<imgHeight; j++)
+        {
+            if(averagesumred[i][j]<0)
+            {
+                averagesumred[i][j] = 0;
+            }
+            if(averagesumred[i][j]>255)
+            {
+                averagesumred[i][j] = 255;
+            }
+            if(averagesumgreen[i][j]<0)
+            {
+                averagesumgreen[i][j] = 0;
+            }
+            if(averagesumgreen[i][j]>255)
+            {
+                averagesumgreen[i][j] = 255;
+            }
+            if(averagesumblue[i][j]<0)
+            {
+                averagesumblue[i][j] = 0;
+            }
+            if(averagesumblue[i][j]>255)
+            {
+                averagesumblue[i][j] = 255;
+            }
 
 
-	 loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
-	//arraycount++;
+            loadedImage->SetRGB(i,j,averagesumred[i][j],averagesumgreen[i][j],averagesumblue[i][j]);
+            //arraycount++;
 //	cout<<averagesumred[i][j]<< "  ";
-	//cout<<arraycount << "  ";
-	}
+            //cout<<arraycount << "  ";
+        }
 	}
 
-   // cout<<arraycount;
+    // cout<<arraycount;
 
     printf(" Finished min filtering.\n");
 
@@ -2391,11 +2395,11 @@ void MyFrame::Negative(wxCommandEvent & event){
     loadedImage = new wxImage(bitmap.ConvertToImage());
 
     for( int i=0;i<imgWidth;i++)
-       for(int j=0;j<imgHeight;j++){
- 	loadedImage->SetRGB(i,j,255-loadedImage->GetRed(i,j),
-				255-loadedImage->GetGreen(i,j),
-				255-loadedImage->GetBlue(i,j));
-    }
+        for(int j=0;j<imgHeight;j++){
+            loadedImage->SetRGB(i,j,255-loadedImage->GetRed(i,j),
+                                255-loadedImage->GetGreen(i,j),
+                                255-loadedImage->GetBlue(i,j));
+        }
 
     printf(" Finished  negative linear transform.\n");
     Refresh();
@@ -2412,26 +2416,26 @@ void MyFrame::Logarithmic(wxCommandEvent & event){
 	int r,g,b;
 	int sumr,sumg,sumb;
 	int constant;
-   cout<<"\nEnter user constant:\n";
-   cin>> constant;
+    cout<<"\nEnter user constant:\n";
+    cin>> constant;
 
 
 
 
     for( int i=0;i<imgWidth;i++)
-       for(int j=0;j<imgHeight;j++){
+        for(int j=0;j<imgHeight;j++){
 
-	r = loadedImage -> GetRed(i,j);
-	g = loadedImage -> GetGreen(i,j);
-	b = loadedImage -> GetBlue(i,j);
+            r = loadedImage -> GetRed(i,j);
+            g = loadedImage -> GetGreen(i,j);
+            b = loadedImage -> GetBlue(i,j);
 
-	sumr = constant * log(1+r);
-	sumg = constant * log(1+g);
-	sumb = constant * log(1+b);
+            sumr = constant * log(1+r);
+            sumg = constant * log(1+g);
+            sumb = constant * log(1+b);
 
 
- 	loadedImage->SetRGB(i,j,sumr,sumg,sumb);
-    }
+            loadedImage->SetRGB(i,j,sumr,sumg,sumb);
+        }
 
     printf("\n\nFinished log function.\n");
     Refresh();
@@ -2448,28 +2452,28 @@ void MyFrame::PowerLaw(wxCommandEvent & event){
 	float sumr,sumg,sumb;
 	float constant;
 	float power;
-   cout<<"\nEnter user constant:\n";
-   cin>> constant;
+    cout<<"\nEnter user constant:\n";
+    cin>> constant;
 
-  float nathansrand = (rand () % 2501/100);
+    float nathansrand = (rand () % 2501/100);
 
-  cout<< "\nRandom Power between 0.01 and 25 is" << nathansrand ;
+    cout<< "\nRandom Power between 0.01 and 25 is" << nathansrand ;
 
 
     for( int i=0;i<imgWidth;i++)
-       for(int j=0;j<imgHeight;j++){
+        for(int j=0;j<imgHeight;j++){
 
-	r = loadedImage -> GetRed(i,j);
-	g = loadedImage -> GetGreen(i,j);
-	b = loadedImage -> GetBlue(i,j);
+            r = loadedImage -> GetRed(i,j);
+            g = loadedImage -> GetGreen(i,j);
+            b = loadedImage -> GetBlue(i,j);
 
-	sumr = constant * pow(r,nathansrand);
-	sumg = constant * pow(g,nathansrand);
-	sumb = constant * pow(b,nathansrand);
+            sumr = constant * pow(r,nathansrand);
+            sumg = constant * pow(g,nathansrand);
+            sumb = constant * pow(b,nathansrand);
 
 
- 	loadedImage->SetRGB(i,j,sumr,sumg,sumb);
-    }
+            loadedImage->SetRGB(i,j,sumr,sumg,sumb);
+        }
 
     printf("\n\nFinished log function.\n");
     Refresh();
@@ -2493,23 +2497,23 @@ void MyFrame::RandomLookUp(wxCommandEvent & event){
 	float constant;
 	float power;
 	int newArray[255];
-  //float nathansrand = (rand () % 256);
+    //float nathansrand = (rand () % 256);
 
 	for( int z = 0; z<255; z++)
 	{
-	newArray[z] = (rand () % 256);
+        newArray[z] = (rand () % 256);
 	}
 
 
     for(int i=0;i<imgWidth;i++)
-       for(int j=0;j<imgHeight;j++){
+        for(int j=0;j<imgHeight;j++){
 
-	r = loadedImage -> GetRed(i,j);
-	g = loadedImage -> GetGreen(i,j);
-	b = loadedImage -> GetBlue(i,j);
-		int newRed = newArray[r];
-		int newGreen = newArray[g];
-		int newBlue = newArray[b];
+            r = loadedImage -> GetRed(i,j);
+            g = loadedImage -> GetGreen(i,j);
+            b = loadedImage -> GetBlue(i,j);
+            int newRed = newArray[r];
+            int newGreen = newArray[g];
+            int newBlue = newArray[b];
 
 
 //	sumr = constant * pow(r,nathansrand);
@@ -2517,8 +2521,8 @@ void MyFrame::RandomLookUp(wxCommandEvent & event){
 //	sumb = constant * pow(b,nathansrand);
 
 
- 	loadedImage->SetRGB(i,j,newRed,newGreen,newBlue);
-    }
+            loadedImage->SetRGB(i,j,newRed,newGreen,newBlue);
+        }
 
     printf("\n\nFinished random lookup function.\n");
     Refresh();
@@ -2530,7 +2534,7 @@ void MyFrame::RandomLookUp(wxCommandEvent & event){
 
 void MyFrame::FindHistogram(wxCommandEvent & event){
 
- printf("Finding  Histogram of image...");
+    printf("Finding  Histogram of image...");
     free(loadedImage);
     loadedImage = new wxImage(bitmap.ConvertToImage());
 
@@ -2541,14 +2545,14 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
 
 
     for(int z=0;z<256;z++) {
-	rArray[z] = 0;
-	gArray[z] = 0;
-	bArray[z] = 0;
+        rArray[z] = 0;
+        gArray[z] = 0;
+        bArray[z] = 0;
     }
 
 
     for(int i=0;i<imgWidth;i++) {
-       for(int j=0;j<imgHeight;j++){
+        for(int j=0;j<imgHeight;j++){
 
 			r = loadedImage -> GetRed(i,j);
 			g = loadedImage -> GetGreen(i,j);
@@ -2560,7 +2564,7 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
 
 			//cout << r << endl;
 
-	   }
+        }
 	}
 
     printf("Found Histogram!");
@@ -2594,18 +2598,18 @@ void MyFrame::FindHistogram(wxCommandEvent & event){
 
 
 	for(int i=0;i<imgWidth;i++)
-			for(int j=0;j<imgHeight;j++){
-					loadedImage->SetRGB(i,j,rCDF[loadedImage->GetRed(i,j)]*255,
-									gCDF[loadedImage->GetGreen(i,j)]*255,
-									bCDF[loadedImage->GetBlue(i,j)]*255);
-			}
+        for(int j=0;j<imgHeight;j++){
+            loadedImage->SetRGB(i,j,rCDF[loadedImage->GetRed(i,j)]*255,
+                                gCDF[loadedImage->GetGreen(i,j)]*255,
+                                bCDF[loadedImage->GetBlue(i,j)]*255);
+        }
 
 	printf("\n\nFinished histogram equalisation function.\n");
 	Refresh();
 }
 
 void MyFrame::HistogramMean(wxCommandEvent & event){
- printf("Finding  Histogram of image...");
+    printf("Finding  Histogram of image...");
     free(loadedImage);
     loadedImage = new wxImage(bitmap.ConvertToImage());
 
@@ -2616,14 +2620,14 @@ void MyFrame::HistogramMean(wxCommandEvent & event){
 
 
     for(int z=0;z<256;z++) {
-	rArray[z] = 0;
-	gArray[z] = 0;
-	bArray[z] = 0;
+        rArray[z] = 0;
+        gArray[z] = 0;
+        bArray[z] = 0;
     }
 
 
     for(int i=0;i<imgWidth;i++) {
-       for(int j=0;j<imgHeight;j++){
+        for(int j=0;j<imgHeight;j++){
 
 			r = loadedImage -> GetRed(i,j);
 			g = loadedImage -> GetGreen(i,j);
@@ -2635,7 +2639,7 @@ void MyFrame::HistogramMean(wxCommandEvent & event){
 
 			//cout << r << endl;
 
-	   }
+        }
 	}
 
     printf("Found Histogram!");
@@ -2660,7 +2664,7 @@ void MyFrame::HistogramMean(wxCommandEvent & event){
 }
 
 void MyFrame::HistogramSD(wxCommandEvent & event){
- printf("Finding  Histogram of image...");
+    printf("Finding  Histogram of image...");
     free(loadedImage);
     loadedImage = new wxImage(bitmap.ConvertToImage());
 
@@ -2671,14 +2675,14 @@ void MyFrame::HistogramSD(wxCommandEvent & event){
 
 
     for(int z=0;z<256;z++) {
-	rArray[z] = 0;
-	gArray[z] = 0;
-	bArray[z] = 0;
+        rArray[z] = 0;
+        gArray[z] = 0;
+        bArray[z] = 0;
     }
 
 
     for(int i=0;i<imgWidth;i++) {
-       for(int j=0;j<imgHeight;j++){
+        for(int j=0;j<imgHeight;j++){
 
 			r = loadedImage -> GetRed(i,j);
 			g = loadedImage -> GetGreen(i,j);
@@ -2690,7 +2694,7 @@ void MyFrame::HistogramSD(wxCommandEvent & event){
 
 			//cout << r << endl;
 
-	   }
+        }
 	}
 
     printf("Found Histogram!");
@@ -2708,7 +2712,7 @@ void MyFrame::HistogramSD(wxCommandEvent & event){
     for(int i=0;i<256;i++){
         rSqArray[i] = pow(rArray[i],2);
         gSqArray[i] = pow(gArray[i],2);
-        bsQArray[i] = pow(bArray[i],2);
+        bSqArray[i] = pow(bArray[i],2);
     }
 
     for(int i=0;i<256;i++){
@@ -2741,8 +2745,41 @@ void MyFrame::HistogramSD(wxCommandEvent & event){
     cout << "Blue Standard Deviation: " << bStd << endl;
 }
 void MyFrame::SimpleThresholding(wxCommandEvent & event){
+    int user_threshold_val;
+    int overwrite_val = 255;
+	cout << "\n Please enter your threshold value: " << endl;
+	cin >> user_threshold_val;
+    free(loadedImage);
+    loadedImage = new wxImage(bitmap.ConvertToImage());
+	int r,g,b;
+
+    for( int i=0;i<imgWidth;i++)
+        for(int j=0;j<imgHeight;j++){
+
+            r = loadedImage -> GetRed(i,j);
+            g = loadedImage -> GetGreen(i,j);
+            b = loadedImage -> GetBlue(i,j);
+
+            //Overwrite rgb values if over threshold.
+            if(r>user_threshold_val){r=overwrite_val;}
+            if(g>user_threshold_val){g=overwrite_val;}
+            if(b>user_threshold_val){b=overwrite_val;}
+            loadedImage->SetRGB(i,j,r,g,b);
+        }
+
+    printf("\n\nFinished simple threshold function.\n");
+    Refresh();
+
 }
 void MyFrame::AutomatedThresholding(wxCommandEvent & event){
+
+    /*Estimate theshold
+      Calculate mean
+      Set as threshold for next pixel
+      Overwrite if over
+      Recalculate threshold; repeat till end.
+     */
+
 }
 
 //###########################################################//
@@ -2755,105 +2792,105 @@ void MyFrame::AutomatedThresholding(wxCommandEvent & event){
 //IMAGE SAVING
 void MyFrame::OnSaveImage(wxCommandEvent & event){
 
-		printf("Saving image...");
-		free(loadedImage);
-		loadedImage = new wxImage(bitmap.ConvertToImage());
+    printf("Saving image...");
+    free(loadedImage);
+    loadedImage = new wxImage(bitmap.ConvertToImage());
 
-		loadedImage->SaveFile(wxT("Saved_Image.bmp"), wxBITMAP_TYPE_BMP);
+    loadedImage->SaveFile(wxT("Saved_Image.bmp"), wxBITMAP_TYPE_BMP);
 
-		printf("Finished Saving.\n");
+    printf("Finished Saving.\n");
 }
 
 
 void MyFrame::OnExit (wxCommandEvent & event){
-		Close(TRUE);
+    Close(TRUE);
 }
 
 
 void MyFrame::OnPaint(wxPaintEvent & event){
-		wxPaintDC dc(this);
-		int cWidth, cHeight;
-		GetSize(&cWidth, &cHeight);
-		if ((back_bitmap == NULL) || (oldWidth != cWidth) || (oldHeight != cHeight)) {
-				if (back_bitmap != NULL)
-						delete back_bitmap;
-				back_bitmap = new wxBitmap(cWidth, cHeight);
-				oldWidth = cWidth;
-				oldHeight = cHeight;
-		}
-		wxMemoryDC *temp_dc = new wxMemoryDC(&dc);
-		temp_dc->SelectObject(*back_bitmap);
-		// We can now draw into the offscreen DC...
-		temp_dc->Clear();
-		if(loadedImage)
-				temp_dc->DrawBitmap(wxBitmap(*loadedImage), 0, 0, false);//given bitmap xcoord y coord and transparency
+    wxPaintDC dc(this);
+    int cWidth, cHeight;
+    GetSize(&cWidth, &cHeight);
+    if ((back_bitmap == NULL) || (oldWidth != cWidth) || (oldHeight != cHeight)) {
+        if (back_bitmap != NULL)
+            delete back_bitmap;
+        back_bitmap = new wxBitmap(cWidth, cHeight);
+        oldWidth = cWidth;
+        oldHeight = cHeight;
+    }
+    wxMemoryDC *temp_dc = new wxMemoryDC(&dc);
+    temp_dc->SelectObject(*back_bitmap);
+    // We can now draw into the offscreen DC...
+    temp_dc->Clear();
+    if(loadedImage)
+        temp_dc->DrawBitmap(wxBitmap(*loadedImage), 0, 0, false);//given bitmap xcoord y coord and transparency
 
-		switch(stuffToDraw){
-				case NOTHING:
-						break;
-				case ORIGINAL_IMG:
-						bitmap.CleanUpHandlers; // clean the actual image header
-						bitmap = wxBitmap(*loadedImage); // Update the edited/loaded image
-						break;
-		}
+    switch(stuffToDraw){
+    case NOTHING:
+        break;
+    case ORIGINAL_IMG:
+        bitmap.CleanUpHandlers; // clean the actual image header
+        bitmap = wxBitmap(*loadedImage); // Update the edited/loaded image
+        break;
+    }
 
-		// update image size
-		imgWidth  = (bitmap.ConvertToImage()).GetWidth();
-		imgHeight = (bitmap.ConvertToImage()).GetHeight();
+    // update image size
+    imgWidth  = (bitmap.ConvertToImage()).GetWidth();
+    imgHeight = (bitmap.ConvertToImage()).GetHeight();
 
 
 
-		temp_dc->SelectObject(bitmap);//given bitmap
+    temp_dc->SelectObject(bitmap);//given bitmap
 
-		//end draw all the things
-		// Copy from this DC to another DC.
-		dc.Blit(0, 0, cWidth, cHeight, temp_dc, 0, 0);
-		delete temp_dc; // get rid of the memory DC
+    //end draw all the things
+    // Copy from this DC to another DC.
+    dc.Blit(0, 0, cWidth, cHeight, temp_dc, 0, 0);
+    delete temp_dc; // get rid of the memory DC
 }
 
-		BEGIN_EVENT_TABLE (MyFrame, wxFrame)
-		EVT_MENU ( LOAD_FILE_ID,  MyFrame::OnOpenFile)
+BEGIN_EVENT_TABLE (MyFrame, wxFrame)
+EVT_MENU ( LOAD_FILE_ID,  MyFrame::OnOpenFile)
 EVT_MENU ( EXIT_ID,  MyFrame::OnExit)
 
-		//###########################################################//
+//###########################################################//
 
-		//###########################################################//
+//###########################################################//
 
-		EVT_MENU ( INVERT_IMAGE_ID,  MyFrame::OnInvertImage)
-		EVT_MENU ( SCALE_IMAGE_ID,  MyFrame::OnScaleImage)
-		EVT_MENU ( SAVE_IMAGE_ID,  MyFrame::OnSaveImage)
-		EVT_MENU ( SHIFTING_IMAGE_ID,  MyFrame::Shifting)
-		EVT_MENU ( AVERAGING_IMAGE_ID,  MyFrame::Averaging)
-		EVT_MENU ( WEIGHTED_IMAGE_ID,  MyFrame::Weighted)
-		EVT_MENU ( FLAPLACIAN_IMAGE_ID,  MyFrame::FLaplacian)
-		EVT_MENU ( ELAPLACIAN_IMAGE_ID,  MyFrame::ELaplacian)
-		EVT_MENU ( FLAPLACIANE_IMAGE_ID,  MyFrame::FLaplacianE)
-		EVT_MENU ( ELAPLACIANE_IMAGE_ID,  MyFrame::ELaplacianE)
-		EVT_MENU ( ROBERTS_IMAGE_ID,  MyFrame::Roberts)
-		EVT_MENU ( SOBELX_IMAGE_ID,  MyFrame::Sobelx)
-		EVT_MENU ( SOBELY_IMAGE_ID,  MyFrame::Sobely)
-		EVT_MENU ( SALTANDPEPPER_IMAGE_ID,  MyFrame::SaltandPepperFiltering)
-		EVT_MENU ( MINFILTERING_IMAGE_ID,  MyFrame::MinFiltering)//--->To be modified!
-		EVT_MENU ( MAXFILTERING_IMAGE_ID,  MyFrame::MaxFiltering)
-		EVT_MENU ( MIDPOINTFILTERING_IMAGE_ID,  MyFrame::MidFiltering)
-		EVT_MENU ( MEDIANFILTERING_IMAGE_ID,  MyFrame::MedFiltering)
-		EVT_MENU ( NEGATIVE_IMAGE_ID,  MyFrame::Negative)
-		EVT_MENU ( LOGARITHMIC_IMAGE_ID,  MyFrame::Logarithmic)
-		EVT_MENU ( POWERLAW_IMAGE_ID,  MyFrame::PowerLaw)
-		EVT_MENU ( RANDOMLOOKUP_IMAGE_ID,  MyFrame::RandomLookUp)
+EVT_MENU ( INVERT_IMAGE_ID,  MyFrame::OnInvertImage)
+EVT_MENU ( SCALE_IMAGE_ID,  MyFrame::OnScaleImage)
+EVT_MENU ( SAVE_IMAGE_ID,  MyFrame::OnSaveImage)
+EVT_MENU ( SHIFTING_IMAGE_ID,  MyFrame::Shifting)
+EVT_MENU ( AVERAGING_IMAGE_ID,  MyFrame::Averaging)
+EVT_MENU ( WEIGHTED_IMAGE_ID,  MyFrame::Weighted)
+EVT_MENU ( FLAPLACIAN_IMAGE_ID,  MyFrame::FLaplacian)
+EVT_MENU ( ELAPLACIAN_IMAGE_ID,  MyFrame::ELaplacian)
+EVT_MENU ( FLAPLACIANE_IMAGE_ID,  MyFrame::FLaplacianE)
+EVT_MENU ( ELAPLACIANE_IMAGE_ID,  MyFrame::ELaplacianE)
+EVT_MENU ( ROBERTS_IMAGE_ID,  MyFrame::Roberts)
+EVT_MENU ( SOBELX_IMAGE_ID,  MyFrame::Sobelx)
+EVT_MENU ( SOBELY_IMAGE_ID,  MyFrame::Sobely)
+EVT_MENU ( SALTANDPEPPER_IMAGE_ID,  MyFrame::SaltandPepperFiltering)
+EVT_MENU ( MINFILTERING_IMAGE_ID,  MyFrame::MinFiltering)//--->To be modified!
+EVT_MENU ( MAXFILTERING_IMAGE_ID,  MyFrame::MaxFiltering)
+EVT_MENU ( MIDPOINTFILTERING_IMAGE_ID,  MyFrame::MidFiltering)
+EVT_MENU ( MEDIANFILTERING_IMAGE_ID,  MyFrame::MedFiltering)
+EVT_MENU ( NEGATIVE_IMAGE_ID,  MyFrame::Negative)
+EVT_MENU ( LOGARITHMIC_IMAGE_ID,  MyFrame::Logarithmic)
+EVT_MENU ( POWERLAW_IMAGE_ID,  MyFrame::PowerLaw)
+EVT_MENU ( RANDOMLOOKUP_IMAGE_ID,  MyFrame::RandomLookUp)
 EVT_MENU ( UNDO_IMAGE_ID,  MyFrame::UndoImage)
 // EVT_MENU ( ROI_IMAGE_ID,  MyFrame::ROI)
-		EVT_MENU ( RESCALE_IMAGE_ID,  MyFrame::Rescale)
-		EVT_MENU ( HISTOGRAM_IMAGE_ID, MyFrame::FindHistogram)
-		EVT_MENU ( MEAN_IMAGE_ID, MyFrame::HistogramMean)
-		EVT_MENU ( STANDARDDEVIATION_IMAGE_ID, MyFrame::HistogramSD)
-		EVT_MENU ( STHRESHOLDING_IMAGE_ID, MyFrame::SimpleThresholding)
+EVT_MENU ( RESCALE_IMAGE_ID,  MyFrame::Rescale)
+EVT_MENU ( HISTOGRAM_IMAGE_ID, MyFrame::FindHistogram)
+EVT_MENU ( MEAN_IMAGE_ID, MyFrame::HistogramMean)
+EVT_MENU ( STANDARDDEVIATION_IMAGE_ID, MyFrame::HistogramSD)
+EVT_MENU ( STHRESHOLDING_IMAGE_ID, MyFrame::SimpleThresholding)
 EVT_MENU ( ATHRESHOLDING_IMAGE_ID, MyFrame::AutomatedThresholding)
 
 
-		//###########################################################//
-		//----------------------END MY EVENTS -----------------------//
-		//###########################################################//
+//###########################################################//
+//----------------------END MY EVENTS -----------------------//
+//###########################################################//
 
-		EVT_PAINT (MyFrame::OnPaint)
+EVT_PAINT (MyFrame::OnPaint)
 END_EVENT_TABLE()
