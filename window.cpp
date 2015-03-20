@@ -2652,9 +2652,9 @@ void MyFrame::HistogramMean(wxCommandEvent & event){
     float rSum,gSum,bSum = 0;
 
     for(int i=0;i<256;i++) {
-        rSum += rArray[r] * i;
-        gSum += gArray[r] * i;
-        bSum += bArray[r] * i;
+        rSum += rArray[i] * i;
+        gSum += gArray[i] * i;
+        bSum += bArray[i] * i;
     }
 
     cout << "Red's Histogram mean is: " << (rSum/res) << endl;
@@ -2695,119 +2695,121 @@ void MyFrame::HistogramSD(wxCommandEvent & event){
 			//cout << r << endl;
 
         }
-	}
+    }
 
     printf("Found Histogram!");
 
-/* /////////////////////////////////////////////////////// */
-/* Normalize now! */
-/* /////////////////////////////////////////////////////// */
-
     float res = imgWidth * imgHeight;
     float rSum,gSum,bSum = 0;
-	float rSqArray[256];
-	float gSqArray[256];
-	float bSqArray[256];
 
-    for(int i=0;i<256;i++){
-        rSqArray[i] = pow(rArray[i],2);
-        gSqArray[i] = pow(gArray[i],2);
-        bSqArray[i] = pow(bArray[i],2);
-    }
-
-    for(int i=0;i<256;i++){
-        rSum += rSqArray[i];
-        gSum += gSqArray[i];
-        bSum += bSqArray[i];
-    }
-    float rMeansq,gMeansq,bMeansq = 0;
-    rMeansq = rSum/res;
-    gMeansq = gSum/res;
-    bMeansq = bSum/res;
-
-    rSum,gSum,bSum = 0;
-
-    for(int i=0;i<256;i++){
-        rSum += rArray[i];
-        gSum += gArray[i];
-        bSum += bArray[i];
+    for(int i=0;i<256;i++) {
+	    rSum += rArray[i] * i;
+	    gSum += gArray[i] * i;
+	    bSum += bArray[i] * i;
     }
     float rMean = rSum/res;
-    float gMean = rSum/res;
-    float bMean = rSum/res;
+    float gMean = gSum/res;
+    float bMean = bSum/res;
 
-    float rStd = sqrt((rMeansq - pow(rMean,2)));
-    float gStd = sqrt((gMeansq - pow(gMean,2)));
-    float bStd = sqrt((bMeansq - pow(bMean,2)));
+    float rSqArray[256];
+    float gSqArray[256];
+    float bSqArray[256];
+    float rvar_sum,gvar_sum,bvar_sum = 0;
+
+    for(int i=0;i<imgWidth;i++) {
+	    for(int j=0;j<imgHeight;j++){
+
+		    r = loadedImage -> GetRed(i,j);
+		    g = loadedImage -> GetGreen(i,j);
+		    b = loadedImage -> GetBlue(i,j);
+		    rvar_sum += r-rMean;
+		    gvar_sum += g-gMean;
+		    bvar_sum += b-bMean;
+		    //cout << r << endl;
+
+	    }
+    }
+    rvar_sum = pow(rvar_sum,2);
+    gvar_sum = pow(gvar_sum,2);
+    bvar_sum = pow(bvar_sum,2);
+
+    float rvar = rvar_sum/res;
+    float gvar = gvar_sum/res;
+    float bvar = bvar_sum/res;
+
+    float rStd = sqrt(rvar);
+    float gStd = sqrt(gvar);
+    float bStd = sqrt(bvar);
 
     cout << "Red Standard Deviation: " << rStd << endl;
     cout << "Green Standard Deviation: " << gStd << endl;
     cout << "Blue Standard Deviation: " << bStd << endl;
+
 }
 void MyFrame::SimpleThresholding(wxCommandEvent & event){
-    int user_threshold_val;
-    int overwrite_val = 255;
+	int user_threshold_val;
+	int overwrite_val = 255;
 	cout << "\n Please enter your threshold value: " << endl;
 	cin >> user_threshold_val;
-    free(loadedImage);
-    loadedImage = new wxImage(bitmap.ConvertToImage());
+	free(loadedImage);
+	loadedImage = new wxImage(bitmap.ConvertToImage());
 	int r,g,b;
 
-    int greyscale;
+	int greyscale;
 
-    for( int i=0;i<imgWidth;i++)
-        for(int j=0;j<imgHeight;j++){
+	for( int i=0;i<imgWidth;i++)
+		for(int j=0;j<imgHeight;j++){
 
-            r = loadedImage -> GetRed(i,j);
-            g = loadedImage -> GetGreen(i,j);
-            b = loadedImage -> GetBlue(i,j);
-            greyscale = (r+g+b)/3;
-            //Overwrite rgb values if over threshold.
-            if(greyscale>user_threshold_val){r=overwrite_val;}
-            else{greyscale=0;}
-            loadedImage->SetRGB(i,j,greyscale,greyscale,greyscale);
-        }
+			r = loadedImage -> GetRed(i,j);
+			g = loadedImage -> GetGreen(i,j);
+			b = loadedImage -> GetBlue(i,j);
+			greyscale = (r+g+b)/3;
+			//Overwrite rgb values if over threshold.
+			if(greyscale>user_threshold_val){r=overwrite_val;}
+			else{greyscale=0;}
+			loadedImage->SetRGB(i,j,greyscale,greyscale,greyscale);
+		}
 
-    printf("\n\nFinished simple threshold function.\n");
-    Refresh();
+	printf("\n\nFinished simple threshold function.\n");
+	Refresh();
 
 }
 void MyFrame::AutomatedThresholding(wxCommandEvent & event){
 
-    free(loadedImage);
-    loadedImage = new wxImage(bitmap.ConvertToImage());
+	free(loadedImage);
+	loadedImage = new wxImage(bitmap.ConvertToImage());
 	int r,g,b;
-    int num_of_white,num_of_black;
-    int greyscale;
-    float original_threshold = 127;
-    float current_threshold;
-    float new_threshold;
-    current_threshold = original_threshold;
-    float white_sum,black_sum=0;
+	int num_of_white,num_of_black;
+	int greyscale;
+	float original_threshold = 127;
+	float current_threshold;
+	float new_threshold;
+	current_threshold = original_threshold;
+	float white_sum,black_sum=0;
 
-    for( int i=0;i<imgWidth;i++)
-        for(int j=0;j<imgHeight;j++){
+	for( int i=0;i<imgWidth;i++)
+		for(int j=0;j<imgHeight;j++){
 
-            r = loadedImage -> GetRed(i,j);
-            g = loadedImage -> GetGreen(i,j);
-            b = loadedImage -> GetBlue(i,j);
-            greyscale = (r+g+b)/3;
-            if(greyscale < current_threshold){black_sum+=greyscale;num_of_black++;}
-            else{white_sum+=greyscale;num_of_white++;}
-            new_threshold = ((white_sum/num_of_white) + (black_sum/num_of_black))/2;
-            if((new_thresold-current_threshold)<original_threshold) {
-                break;
-            }
-            else {
-                current_threshold=new_threshold;
-                if(greyscale<current_threshold){greyscale=0;}
-                else{greyscale=255;}
-            }
-            loadedImage->SetRGB(i,j,greyscale,greyscale,greyscale);
-        }
+			r = loadedImage -> GetRed(i,j);
+			g = loadedImage -> GetGreen(i,j);
+			b = loadedImage -> GetBlue(i,j);
+			greyscale = (r+g+b)/3;
+			if(greyscale < current_threshold){black_sum+=greyscale;num_of_black++;}
+			else{white_sum+=greyscale;num_of_white++;}
+			new_threshold = ((white_sum/num_of_white) + (black_sum/num_of_black))/2;
+			if((new_threshold-current_threshold)<original_threshold) {
+				break;
+			}
+			else {
+				current_threshold=new_threshold;
+				if(greyscale<current_threshold){greyscale=0;}
+				else{greyscale=255;}
+			}
+			loadedImage->SetRGB(i,j,greyscale,greyscale,greyscale);
+		}
 
-    printf("\nFinished iterative automated threshold function.\n");
-    Refresh();
+	printf("\nFinished iterative automated threshold function.\n");
+	Refresh();
 
 }
 
@@ -2821,105 +2823,105 @@ void MyFrame::AutomatedThresholding(wxCommandEvent & event){
 //IMAGE SAVING
 void MyFrame::OnSaveImage(wxCommandEvent & event){
 
-    printf("Saving image...");
-    free(loadedImage);
-    loadedImage = new wxImage(bitmap.ConvertToImage());
+	printf("Saving image...");
+	free(loadedImage);
+	loadedImage = new wxImage(bitmap.ConvertToImage());
 
-    loadedImage->SaveFile(wxT("Saved_Image.bmp"), wxBITMAP_TYPE_BMP);
+	loadedImage->SaveFile(wxT("Saved_Image.bmp"), wxBITMAP_TYPE_BMP);
 
-    printf("Finished Saving.\n");
+	printf("Finished Saving.\n");
 }
 
 
 void MyFrame::OnExit (wxCommandEvent & event){
-    Close(TRUE);
+	Close(TRUE);
 }
 
 
 void MyFrame::OnPaint(wxPaintEvent & event){
-    wxPaintDC dc(this);
-    int cWidth, cHeight;
-    GetSize(&cWidth, &cHeight);
-    if ((back_bitmap == NULL) || (oldWidth != cWidth) || (oldHeight != cHeight)) {
-        if (back_bitmap != NULL)
-            delete back_bitmap;
-        back_bitmap = new wxBitmap(cWidth, cHeight);
-        oldWidth = cWidth;
-        oldHeight = cHeight;
-    }
-    wxMemoryDC *temp_dc = new wxMemoryDC(&dc);
-    temp_dc->SelectObject(*back_bitmap);
-    // We can now draw into the offscreen DC...
-    temp_dc->Clear();
-    if(loadedImage)
-        temp_dc->DrawBitmap(wxBitmap(*loadedImage), 0, 0, false);//given bitmap xcoord y coord and transparency
+	wxPaintDC dc(this);
+	int cWidth, cHeight;
+	GetSize(&cWidth, &cHeight);
+	if ((back_bitmap == NULL) || (oldWidth != cWidth) || (oldHeight != cHeight)) {
+		if (back_bitmap != NULL)
+			delete back_bitmap;
+		back_bitmap = new wxBitmap(cWidth, cHeight);
+		oldWidth = cWidth;
+		oldHeight = cHeight;
+	}
+	wxMemoryDC *temp_dc = new wxMemoryDC(&dc);
+	temp_dc->SelectObject(*back_bitmap);
+	// We can now draw into the offscreen DC...
+	temp_dc->Clear();
+	if(loadedImage)
+		temp_dc->DrawBitmap(wxBitmap(*loadedImage), 0, 0, false);//given bitmap xcoord y coord and transparency
 
-    switch(stuffToDraw){
-    case NOTHING:
-        break;
-    case ORIGINAL_IMG:
-        bitmap.CleanUpHandlers; // clean the actual image header
-        bitmap = wxBitmap(*loadedImage); // Update the edited/loaded image
-        break;
-    }
+	switch(stuffToDraw){
+		case NOTHING:
+			break;
+		case ORIGINAL_IMG:
+			bitmap.CleanUpHandlers; // clean the actual image header
+			bitmap = wxBitmap(*loadedImage); // Update the edited/loaded image
+			break;
+	}
 
-    // update image size
-    imgWidth  = (bitmap.ConvertToImage()).GetWidth();
-    imgHeight = (bitmap.ConvertToImage()).GetHeight();
+	// update image size
+	imgWidth  = (bitmap.ConvertToImage()).GetWidth();
+	imgHeight = (bitmap.ConvertToImage()).GetHeight();
 
 
 
-    temp_dc->SelectObject(bitmap);//given bitmap
+	temp_dc->SelectObject(bitmap);//given bitmap
 
-    //end draw all the things
-    // Copy from this DC to another DC.
-    dc.Blit(0, 0, cWidth, cHeight, temp_dc, 0, 0);
-    delete temp_dc; // get rid of the memory DC
+	//end draw all the things
+	// Copy from this DC to another DC.
+	dc.Blit(0, 0, cWidth, cHeight, temp_dc, 0, 0);
+	delete temp_dc; // get rid of the memory DC
 }
 
-BEGIN_EVENT_TABLE (MyFrame, wxFrame)
-EVT_MENU ( LOAD_FILE_ID,  MyFrame::OnOpenFile)
+	BEGIN_EVENT_TABLE (MyFrame, wxFrame)
+	EVT_MENU ( LOAD_FILE_ID,  MyFrame::OnOpenFile)
 EVT_MENU ( EXIT_ID,  MyFrame::OnExit)
 
-//###########################################################//
+	//###########################################################//
 
-//###########################################################//
+	//###########################################################//
 
-EVT_MENU ( INVERT_IMAGE_ID,  MyFrame::OnInvertImage)
-EVT_MENU ( SCALE_IMAGE_ID,  MyFrame::OnScaleImage)
-EVT_MENU ( SAVE_IMAGE_ID,  MyFrame::OnSaveImage)
-EVT_MENU ( SHIFTING_IMAGE_ID,  MyFrame::Shifting)
-EVT_MENU ( AVERAGING_IMAGE_ID,  MyFrame::Averaging)
-EVT_MENU ( WEIGHTED_IMAGE_ID,  MyFrame::Weighted)
-EVT_MENU ( FLAPLACIAN_IMAGE_ID,  MyFrame::FLaplacian)
-EVT_MENU ( ELAPLACIAN_IMAGE_ID,  MyFrame::ELaplacian)
-EVT_MENU ( FLAPLACIANE_IMAGE_ID,  MyFrame::FLaplacianE)
-EVT_MENU ( ELAPLACIANE_IMAGE_ID,  MyFrame::ELaplacianE)
-EVT_MENU ( ROBERTS_IMAGE_ID,  MyFrame::Roberts)
-EVT_MENU ( SOBELX_IMAGE_ID,  MyFrame::Sobelx)
-EVT_MENU ( SOBELY_IMAGE_ID,  MyFrame::Sobely)
-EVT_MENU ( SALTANDPEPPER_IMAGE_ID,  MyFrame::SaltandPepperFiltering)
-EVT_MENU ( MINFILTERING_IMAGE_ID,  MyFrame::MinFiltering)//--->To be modified!
-EVT_MENU ( MAXFILTERING_IMAGE_ID,  MyFrame::MaxFiltering)
-EVT_MENU ( MIDPOINTFILTERING_IMAGE_ID,  MyFrame::MidFiltering)
-EVT_MENU ( MEDIANFILTERING_IMAGE_ID,  MyFrame::MedFiltering)
-EVT_MENU ( NEGATIVE_IMAGE_ID,  MyFrame::Negative)
-EVT_MENU ( LOGARITHMIC_IMAGE_ID,  MyFrame::Logarithmic)
-EVT_MENU ( POWERLAW_IMAGE_ID,  MyFrame::PowerLaw)
-EVT_MENU ( RANDOMLOOKUP_IMAGE_ID,  MyFrame::RandomLookUp)
+	EVT_MENU ( INVERT_IMAGE_ID,  MyFrame::OnInvertImage)
+	EVT_MENU ( SCALE_IMAGE_ID,  MyFrame::OnScaleImage)
+	EVT_MENU ( SAVE_IMAGE_ID,  MyFrame::OnSaveImage)
+	EVT_MENU ( SHIFTING_IMAGE_ID,  MyFrame::Shifting)
+	EVT_MENU ( AVERAGING_IMAGE_ID,  MyFrame::Averaging)
+	EVT_MENU ( WEIGHTED_IMAGE_ID,  MyFrame::Weighted)
+	EVT_MENU ( FLAPLACIAN_IMAGE_ID,  MyFrame::FLaplacian)
+	EVT_MENU ( ELAPLACIAN_IMAGE_ID,  MyFrame::ELaplacian)
+	EVT_MENU ( FLAPLACIANE_IMAGE_ID,  MyFrame::FLaplacianE)
+	EVT_MENU ( ELAPLACIANE_IMAGE_ID,  MyFrame::ELaplacianE)
+	EVT_MENU ( ROBERTS_IMAGE_ID,  MyFrame::Roberts)
+	EVT_MENU ( SOBELX_IMAGE_ID,  MyFrame::Sobelx)
+	EVT_MENU ( SOBELY_IMAGE_ID,  MyFrame::Sobely)
+	EVT_MENU ( SALTANDPEPPER_IMAGE_ID,  MyFrame::SaltandPepperFiltering)
+	EVT_MENU ( MINFILTERING_IMAGE_ID,  MyFrame::MinFiltering)//--->To be modified!
+	EVT_MENU ( MAXFILTERING_IMAGE_ID,  MyFrame::MaxFiltering)
+	EVT_MENU ( MIDPOINTFILTERING_IMAGE_ID,  MyFrame::MidFiltering)
+	EVT_MENU ( MEDIANFILTERING_IMAGE_ID,  MyFrame::MedFiltering)
+	EVT_MENU ( NEGATIVE_IMAGE_ID,  MyFrame::Negative)
+	EVT_MENU ( LOGARITHMIC_IMAGE_ID,  MyFrame::Logarithmic)
+	EVT_MENU ( POWERLAW_IMAGE_ID,  MyFrame::PowerLaw)
+	EVT_MENU ( RANDOMLOOKUP_IMAGE_ID,  MyFrame::RandomLookUp)
 EVT_MENU ( UNDO_IMAGE_ID,  MyFrame::UndoImage)
 // EVT_MENU ( ROI_IMAGE_ID,  MyFrame::ROI)
-EVT_MENU ( RESCALE_IMAGE_ID,  MyFrame::Rescale)
-EVT_MENU ( HISTOGRAM_IMAGE_ID, MyFrame::FindHistogram)
-EVT_MENU ( MEAN_IMAGE_ID, MyFrame::HistogramMean)
-EVT_MENU ( STANDARDDEVIATION_IMAGE_ID, MyFrame::HistogramSD)
-EVT_MENU ( STHRESHOLDING_IMAGE_ID, MyFrame::SimpleThresholding)
+	EVT_MENU ( RESCALE_IMAGE_ID,  MyFrame::Rescale)
+	EVT_MENU ( HISTOGRAM_IMAGE_ID, MyFrame::FindHistogram)
+	EVT_MENU ( MEAN_IMAGE_ID, MyFrame::HistogramMean)
+	EVT_MENU ( STANDARDDEVIATION_IMAGE_ID, MyFrame::HistogramSD)
+	EVT_MENU ( STHRESHOLDING_IMAGE_ID, MyFrame::SimpleThresholding)
 EVT_MENU ( ATHRESHOLDING_IMAGE_ID, MyFrame::AutomatedThresholding)
 
 
-//###########################################################//
-//----------------------END MY EVENTS -----------------------//
-//###########################################################//
+	//###########################################################//
+	//----------------------END MY EVENTS -----------------------//
+	//###########################################################//
 
-EVT_PAINT (MyFrame::OnPaint)
+	EVT_PAINT (MyFrame::OnPaint)
 END_EVENT_TABLE()
