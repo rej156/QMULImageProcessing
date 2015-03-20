@@ -2498,37 +2498,45 @@ void MyFrame::AutomatedThresholding(wxCommandEvent & event){
 	free(loadedImage);
 	loadedImage = new wxImage(bitmap.ConvertToImage());
 	int r,g,b;
-	int num_of_white,num_of_black;
-	int greyscale;
-	float original_threshold = 127;
-	float current_threshold;
-	float new_threshold;
-	current_threshold = original_threshold;
-	float white_sum,black_sum=0;
-
-	for( int i=0;i<imgWidth;i++)
-		for(int j=0;j<imgHeight;j++){
-
-			r = loadedImage -> GetRed(i,j);
-			g = loadedImage -> GetGreen(i,j);
-			b = loadedImage -> GetBlue(i,j);
-			greyscale = (r+g+b)/3;
-			if(greyscale < current_threshold){black_sum+=greyscale;num_of_black++;}
-			else{white_sum+=greyscale;num_of_white++;}
-			new_threshold = ((white_sum/num_of_white) + (black_sum/num_of_black))/2;
-			if((new_threshold-current_threshold)<original_threshold) {
-				break;
-			}
-			else {
-				current_threshold=new_threshold;
-				if(greyscale<current_threshold){greyscale=0;}
-				else{greyscale=255;}
-			}
-			loadedImage->SetRGB(i,j,greyscale,greyscale,greyscale);
-		}
-
-	printf("\nFinished iterative automated threshold function.\n");
-	Refresh();
+	wxImage greyimage = loadedImage->ConvertToGreyscale();
+       
+        for (int i = 0; i < imgWidth; i++)
+        {
+                for (int j = 0; j < imgHeight; j++)
+                {
+                        r= greyimage.GetRed(i, j);
+                        g= greyimage.GetGreen(i, j);
+                        b= greyimage.GetBlue(i, j);
+                       
+                        loadedImage->SetRGB(i, j, r, g, b);
+                }
+        }
+       
+        float mean = 0;
+        int count = 0;
+        float value = 0;
+       
+        for(int i=0; i<imgWidth; i++)
+        {
+                for (int j=0; j<imgHeight; j++)
+                {
+                        count++;
+                        mean += loadedImage->GetRed(i, j);
+                }
+        }
+       
+        mean /= count;
+       
+        for (int i = 0; i < imgWidth; i++)
+        {
+                for (int j = 0; j < imgHeight; j++)
+                {
+                        value = loadedImage->GetRed(i, j);
+                        if (value < mean){
+								loadedImage->SetRGB(i, j, 0, 0, 0);
+						}
+				}
+        }
 
 }
 
