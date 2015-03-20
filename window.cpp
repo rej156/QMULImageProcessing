@@ -27,6 +27,7 @@ MyFrame::MyFrame(const wxString title, int xpos, int ypos, int width, int height
 
   fileMenu = new wxMenu;
   fileMenu->Append(LOAD_FILE_ID, _T("&Open file"));
+  fileMenu->Append(RAWLOAD_FILE_ID, _T("&Open RAW file"));
   fileMenu->AppendSeparator();
 //###########################################################//
 //----------------------START MY MENU -----------------------//
@@ -2762,7 +2763,7 @@ void MyFrame::SimpleThresholding(wxCommandEvent & event){
 			b = loadedImage -> GetBlue(i,j);
 			greyscale = (r+g+b)/3;
 			//Overwrite rgb values if over threshold.
-			if(greyscale>user_threshold_val){r=overwrite_val;}
+			if(greyscale>user_threshold_val){greyscale=overwrite_val;}
 			else{greyscale=0;}
 			loadedImage->SetRGB(i,j,greyscale,greyscale,greyscale);
 		}
@@ -2829,6 +2830,47 @@ void MyFrame::OnSaveImage(wxCommandEvent & event){
 	printf("Finished Saving.\n");
 }
 
+void MyFrame::OnRawOpenFile(wxCommandEvent & event) {
+    wxFileDialog *openFileDialog = new wxFileDialog ( this, _T("Open file"), _T(""), _T(""), FILETYPES, wxOPEN, wxDefaultPosition);
+    if(openFileDialog->ShowModal() == wxID_OK){
+        wxString filename = openFileDialog->GetFilename();
+        wxString path = openFileDialog->GetPath();
+        printf("Loading raw image form file...");
+
+        int size = 0;
+        FILE* pInput = NULL;
+        unsigned char* buf;
+        unsigned char* nbuf;
+
+        if (pInput = fopen(path.char_str(), "r")){
+            fseek(pInput,0,SEEK_END);
+            size = ftell(pInput);
+            fseek(pInput,0,SEEK_SET);
+            buf = new unsigned char[size];
+            nbuf = new unsigned char[size*3];
+            fread(buf,sizeof(char),size,pInput);
+        }
+
+        int ii=0;
+        int j = 0;
+        for( int i = 0; i < (size) *3; i=i+3 )
+        {
+            nbuf[i]=buf[ii];
+            nbuf[i+1]=buf[ii];
+            nbuf[i+2]=buf[ii];
+            ii=ii+1;
+        }
+
+        loadedImage = new wxImage(sqrt(size),sqrt(size),nbuf,false);
+        if(loadedImage->Ok()){
+            stuffToDraw = ORIGINAL_IMG;    // set the display flag
+            printf("Done! \n");
+        }
+        Refresh();
+    }
+}
+
+
 
 void MyFrame::OnExit (wxCommandEvent & event){
 	Close(TRUE);
@@ -2878,7 +2920,8 @@ void MyFrame::OnPaint(wxPaintEvent & event){
 
 	BEGIN_EVENT_TABLE (MyFrame, wxFrame)
 	EVT_MENU ( LOAD_FILE_ID,  MyFrame::OnOpenFile)
-EVT_MENU ( EXIT_ID,  MyFrame::OnExit)
+	EVT_MENU ( RAWLOAD_FILE_ID,  MyFrame::OnRawOpenFile)
+    EVT_MENU ( EXIT_ID,  MyFrame::OnExit)
 
 	//###########################################################//
 
@@ -2906,14 +2949,14 @@ EVT_MENU ( EXIT_ID,  MyFrame::OnExit)
 	EVT_MENU ( LOGARITHMIC_IMAGE_ID,  MyFrame::Logarithmic)
 	EVT_MENU ( POWERLAW_IMAGE_ID,  MyFrame::PowerLaw)
 	EVT_MENU ( RANDOMLOOKUP_IMAGE_ID,  MyFrame::RandomLookUp)
-EVT_MENU ( UNDO_IMAGE_ID,  MyFrame::UndoImage)
+    EVT_MENU ( UNDO_IMAGE_ID,  MyFrame::UndoImage)
 // EVT_MENU ( ROI_IMAGE_ID,  MyFrame::ROI)
 	EVT_MENU ( RESCALE_IMAGE_ID,  MyFrame::Rescale)
 	EVT_MENU ( HISTOGRAM_IMAGE_ID, MyFrame::FindHistogram)
 	EVT_MENU ( MEAN_IMAGE_ID, MyFrame::HistogramMean)
 	EVT_MENU ( STANDARDDEVIATION_IMAGE_ID, MyFrame::HistogramSD)
 	EVT_MENU ( STHRESHOLDING_IMAGE_ID, MyFrame::SimpleThresholding)
-EVT_MENU ( ATHRESHOLDING_IMAGE_ID, MyFrame::AutomatedThresholding)
+    EVT_MENU ( ATHRESHOLDING_IMAGE_ID, MyFrame::AutomatedThresholding)
 
 
 	//###########################################################//

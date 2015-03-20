@@ -55,6 +55,7 @@ class MyFrame : public wxFrame {
     virtual ~MyFrame();
     void OnExit(wxCommandEvent & event);
     void OnOpenFile(wxCommandEvent & event);
+    void OnRawOpenFile(wxCommandEvent & event);
     void OnPaint(wxPaintEvent & event);
 
     DECLARE_EVENT_TABLE()
@@ -67,6 +68,7 @@ enum { NOTHING = 0,
 
 enum { EXIT_ID = wxID_HIGHEST + 1,
        LOAD_FILE_ID,
+       RAWLOAD_FILE_ID,
        INVERT_IMAGE_ID,
        SCALE_IMAGE_ID,
        SAVE_IMAGE_ID,
